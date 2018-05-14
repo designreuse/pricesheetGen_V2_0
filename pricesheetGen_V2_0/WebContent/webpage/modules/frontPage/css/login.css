@@ -1,0 +1,256 @@
+﻿﻿#login_body{
+  background-color: #f3f3f3;
+  height: 100%;
+}
+.head_div{
+	background: #d32f2f;
+	width:100%;
+	height: 40px;
+	/**margin-bottom: 19px;**/
+}
+.head_div_1{
+	background: #d32f2f;
+	width:20%;
+	display: inline-block;
+}
+.head_div_2{
+	height:100%;
+	background: #d32f2f;
+	width:58%;
+	display: inline-block;
+	text-align:center;
+	font-size:17px;
+	color:rgba(255,255,255,1);
+	line-height: 40px;
+}
+.head_div_3{
+	background: #d32f2f;
+	width:20%;
+	display: inline-block;
+}
+.head_left_img{
+	height: 14px;
+	background: #d32f2f;
+	margin:0px 0px 0px 28px;
+}
+.log_span1{
+	color:rgba(0,0,0,0.87);
+	font-weight: 900;
+	margin: 19px 0px 0px 16px;
+	text-align: left;
+}
+.log_div_in{
+	width:100% !important;
+	display: inline-block;
+	border-bottom:1px solid;
+	color:rgba(0,0,0,0.12);
+	margin: 30px 0px 0px 0px !important;
+}
+.log_in1{
+	background-color: #f3f3f3;
+	border:0;
+	width:100%;
+	color:rgba(0,0,0,0.26);
+	font-size: 15px !important;
+	margin-left: -23px;
+	margin-bottom:12px;
+}
+.log_div_in2{
+	width:50%;
+	display: inline-block;
+	margin-left: -23px;
+}
+.log_in2{
+	width:100%;
+	color:rgba(0,0,0,0.26);
+	font-size: 15px !important;
+	margin-bottom:12px !important;
+	z-index: 9;
+	height : 17px !important
+}
+.log_but{
+	width:100%;
+	border:0;
+	color: red;
+	text-align: right;
+	margin-right: 32px;
+	font-size:15px;
+	z-index: 8;
+	background-color: #f3f3f3;
+}
+.but_div{
+	background:#d32f2f;
+	height: 40px;
+	margin: 40px 16px 0px 16px;
+}
+.but_text{
+	font-size:17px;
+	text-align:center;
+	line-height:40px;
+	color:rgba(255,255,255,1);
+}
+.log_none{
+	
+}
+.account{
+  background-color: #fff;
+/*   margin: 18px 0px 0px 16px; */
+  margin-bottom: 10px;
+  padding:18px 0px 6px 16px;
+  border: 0px solid rgba(0,0,0,0.8);
+}
+.account_list{
+  marker-top: 18px;
+  margin-bottom: 10px;
+  background-color: #fff;
+  border: 0px solid;
+}
+.account_parm{
+  margin-bottom: 10px;
+  background: #fff;
+  font-size: 15px;
+  color: rgba(0,0,0,0.87);
+}
+.pay{
+	width: 100%;
+	background-color: #fff;
+}
+.paydiv{
+	font-size: 15px;
+	width:80%;
+	display: inline-block;
+	background-color: #fff;
+}
+.paybut{
+	width:15%;
+	display: inline-block;
+	font-size: 15px;
+	color: #f44336;
+	background-color: #fff;
+}
+.angular_content{
+	background-color: white;
+    margin-bottom: 8px;
+}
+.card_div_show{
+	border-bottom: 0px solid;
+	text-align:left;
+	font-size:10px;
+	margin: 23px 0px 45px 0px;
+	line-height:1.5;
+}
+.card_span{
+	font-size: 15px; 
+	color: rgba(0,0,0,0.54);
+}
+.account_log_div{
+	margin-top: 107px;
+	text-align:center;
+	width:100%;
+	border: 0px solid;
+}
+.account_log_img{
+	background-color: #f3f3f3;
+	margin: 0px auto;
+	display:block;
+}
+.account_log_span{
+	margin-top: 13px;
+	width: 100%;
+	text-align: center;
+	font-size: 17px;
+	color: rgba(0,0,0,0.54);
+}
+.account_log_but_div{
+	margin: 15px 0px 314px 0px;
+	width: 100%;
+	text-align: center;
+}
+.account_log_but{
+	width: 30%;
+	border: 1px solid;
+	border-radius: 40px;
+	font-size: 17px;
+	color: rgba(0,0,0,0.87);
+}
+.component{
+	background-color: #fad565;
+	text-align: center;
+	width:56px;
+	margin-bottom: 103px;
+	margin-left: 4px;
+	border-radius:50%;
+}
+.cn-button {
+/*   border: none; 
+  background: none;
+  color: #f06060;
+  text-align: center;
+  font-size: 1.8em;
+  padding-bottom: 1em;
+  height: 3.5em;
+  width: 3.5em;
+  background-color: #fff;
+  position: fixed;
+  left: 2.5%;
+  margin-left: -1.75em;
+  bottom: -1.75em;
+  border-radius: 50%;
+  cursor: pointer;
+   z-index: 11; */
+   border-radius: 50%;
+}
+
+.label_div{
+	width:95%;
+	height: 56px;
+	/**margin-bottom: 19px;**/
+}
+.label_div_1{
+	width:104px;
+	display: inline-block;
+}
+.label_div_2{
+	height:100%;
+	background: #d32f2f;
+	width:33%;
+	display: inline-block;
+	text-align:center;
+	font-size:17px;
+	color:rgba(255,255,255,1);
+	line-height: 40px;
+}
+.label_div_3{
+	background: #d32f2f;
+	width:33%;
+	display: inline-block;
+}
+
+.category_div{
+	background: #fff;
+	width:100%;
+	height: 40px;
+	/**margin-bottom: 19px;**/
+}
+.category_div_2{
+	background: #fff;
+	width:50%;
+	display: inline-block;
+}
+.category_div_1{
+	height:100%;
+	background: #fff;
+	width:90%;
+	display: inline-block;
+	font-size:17px;
+	color:rgba(0,0,0,1);
+	line-height: 40px;
+}
+.category_div_3{
+	background: #fff;
+	width:20%;
+	display: inline-block;
+}
+.display_div{
+	display: none;
+}

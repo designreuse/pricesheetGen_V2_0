@@ -1,0 +1,280 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.quotation.dao.QuotationOrderDao">
+    
+	<sql id="quotationOrderColumns">
+		a.id AS "id",
+		a.quotation_code AS "quotationCode",
+		a.quotation_date AS "quotationDate",
+		a.settlement_type AS "settlementType",
+		a.pay_type AS "payType",
+		a.with_tax_amt AS "withTaxAmt",
+		a.privilege_amt AS "privilegeAmt",
+		a.deal_amt AS "dealAmt",
+		a.arrival_days AS "arrivalDays",
+		a.cust_id AS "custId",
+		a.cust_name AS "custName",
+		a.status AS "status",
+		a.snd_flag AS "sndFlag",
+		a.remark AS "remark",
+		a.staff_id AS "staffId",
+		a.staff_name AS "staffName",
+		a.delivery_mode AS "deliveryMode",
+		a.other_add AS "otherAdd",
+		a.company AS "company",
+		a.company_code AS "companyCode",
+		a.company_phone AS "companyPhone",
+		a.company_fax AS "companyFax",
+		a.quotation_about AS "quotationAbout",
+		a.update_by AS "updateBy.id",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<sql id="quotationOrderJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="QuotationOrder" >
+		SELECT 
+			<include refid="quotationOrderColumns"/>
+		FROM t_product_order a
+		<include refid="quotationOrderJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="QuotationOrder" >
+		SELECT 
+			distinct 
+			<include refid="quotationOrderColumns"/>
+		<choose>
+			<when test="productName !=null and productName !='' ">
+				,b.product_name AS "productName"
+				FROM     t_product_order a left join t_product_order_detail b on a.quotation_code = b.quotation_code
+			</when>
+			<otherwise>
+				FROM     t_product_order a
+			</otherwise>
+		</choose>
+		<where>
+			<if test="productName !=null and productName !='' ">
+				b.product_name LIKE CONCAT('%',#{productName},'%' ) 
+			</if>
+			<if test="quotationCode != null and quotationCode != ''">
+				AND a.quotation_code = #{quotationCode}
+			</if>
+			<if test="beginQuotationDate != null and endQuotationDate != null and beginQuotationDate != '' and endQuotationDate != ''">
+				AND a.quotation_date BETWEEN #{beginQuotationDate} AND #{endQuotationDate}
+			</if>
+			<if test="quotationAbout != null and quotationAbout != '' ">
+			 	AND a.quotation_about LIKE CONCAT('%',#{quotationAbout},'%' ) 
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date DESC,a.update_date DESC,a.quotation_code DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QuotationOrder" >
+		SELECT 
+			<include refid="quotationOrderColumns"/>
+		FROM t_product_order a
+		<include refid="quotationOrderJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.quotation_Code DESC,a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_product_order(
+			id,
+			quotation_code,
+			quotation_date,
+			settlement_type,
+			pay_type,
+			with_tax_amt,
+			privilege_amt,
+			deal_amt,
+			arrival_days,
+			cust_id,
+			cust_name,
+			status,
+			snd_flag,
+			remark,
+			staff_id,
+			staff_name,
+			delivery_mode,
+			other_add,
+			company,
+			company_code,
+			company_phone,
+			company_fax,
+			quotation_about,
+			update_by,
+			create_date,
+			create_by,
+			update_date
+		) VALUES (
+			#{id},
+			#{quotationCode},
+			#{quotationDate},
+			#{settlementType},
+			#{payType},
+			#{withTaxAmt},
+			#{privilegeAmt},
+			#{dealAmt},
+			#{arrivalDays},
+			#{custId},
+			#{custName},
+			#{status},
+			#{sndFlag},
+			#{remark},
+			#{staffId},
+			#{staffName},
+			#{deliveryMode},
+			#{otherAdd},
+			#{company},
+			#{companyCode},
+			#{companyPhone},
+			#{companyFax},
+			#{quotationAbout},
+			#{updateBy.id},
+			sysdate(),
+			#{createBy.id},
+			#{updateDate}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_product_order SET 	
+			quotation_code = #{quotationCode},
+			quotation_date = #{quotationDate},
+			settlement_type = #{settlementType},
+			with_tax_amt = #{withTaxAmt},
+			privilege_amt = #{privilegeAmt},
+			deal_amt = #{dealAmt},
+			arrival_days = #{arrivalDays},
+			cust_id = #{custId},
+			cust_name = #{custName},
+			status = #{status},
+			snd_flag = #{sndFlag},
+			remark = #{remark},
+			staff_id = #{staffId},
+			staff_name = #{staffName},
+			delivery_mode = #{deliveryMode},
+			other_add = #{otherAdd},
+			company = #{company},
+			company_code = #{companyCode},
+			company_phone = #{companyPhone},
+			company_fax = #{companyFax},
+			quotation_about = #{quotationAbout},
+			update_by = #{updateBy.id},
+			update_date = sysdate(),
+			pay_type =#{payType}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_order
+		WHERE id = #{id}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE t_product_order SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="QuotationOrder" statementType="STATEMENT">
+		select * FROM t_product_order  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="selectStaffCurCount" resultType="java.lang.Integer" parameterType="java.lang.String" >
+		select  count(1) staffCount from t_product_order t  where t.staff_id =   #{staffId:VARCHAR}   
+		and t.create_date   &gt;=  curdate()
+	</select>
+	
+    <update id="updateByQuotCodeWithId" parameterType="QuotationOrder" >
+    	update 
+    		t_product_order
+    	set 
+    		 update_date = sysdate(),update_by = #{updateBy.id}
+      <if test="quotationDate != null" >
+        ,quotation_date = #{quotationDate,jdbcType=DATE}
+      </if>
+      <if test="settlementType != null" >
+        ,settlement_type = #{settlementType,jdbcType=CHAR}
+      </if>
+      <if test="staffId != null" >
+        ,staff_id = #{staffId,jdbcType=VARCHAR}  
+      </if>
+      <if test="withTaxAmt != null" >
+        ,with_tax_amt = #{withTaxAmt,jdbcType=DECIMAL}
+      </if>
+      <if test="privilegeAmt != null" >
+        ,privilege_amt = #{privilegeAmt,jdbcType=DECIMAL}
+      </if>
+      <if test="dealAmt != null" >
+        ,deal_amt = #{dealAmt,jdbcType=DECIMAL}
+      </if>
+      <if test="arrivalDays != null" >
+        ,arrival_days = #{arrivalDays,jdbcType=INTEGER}
+      </if>
+      <if test="deliveryMode != null" >
+        ,delivery_mode = #{deliveryMode,jdbcType=VARCHAR}
+      </if>
+      <if test="otherAdd != null" >
+        ,other_add = #{otherAdd,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null" >
+        ,status = #{status,jdbcType=CHAR}
+      </if>
+      <if test="remark != null" >
+        ,remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="companyCode != null" >
+        ,company_code = #{companyCode,jdbcType=VARCHAR}
+      </if>
+      <if test="company != null" >
+        ,company = #{company,jdbcType=VARCHAR}
+      </if>
+      <if test="companyPhone != null" >
+        ,company_phone = #{companyPhone,jdbcType=VARCHAR}
+      </if>
+      <if test="companyFax != null" >
+        ,company_fax = #{companyFax,jdbcType=VARCHAR}
+      </if>
+      <if test="quotationAbout != null" >
+        ,quotation_about = #{quotationAbout,jdbcType=VARCHAR}
+      </if>
+      <if test="staffName != null" >
+        ,staff_name = #{staffName,jdbcType=VARCHAR}
+      </if>         
+      <if test="payType != null" >
+        ,pay_type = #{payType,jdbcType=VARCHAR}
+      </if>         
+    where quotation_code = #{quotationCode,jdbcType=CHAR}
+    	and id = #{id}
+    	and EXISTS (select id from sys_user where id = #{updateBy.id} )
+  </update>
+	
+</mapper>

@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.annotation.dao.AnnotationDao">
+    
+	<sql id="annotationColumns">
+		a.uid AS "uid",
+		a.quotation_code AS "quotationCode",
+		a.detail_id AS "detailId",
+		a.anno_name AS "annoName",
+		a.anno_type AS "annoType",
+		a.anno_price AS "annoPrice",
+		a.is_master AS "isMaster",
+		a.remark as "remark",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate"
+	</sql>
+	
+	<select id="get" resultType="Annotation" >
+		SELECT 
+			<include refid="annotationColumns"/>
+		   ,b.product_desc as "productDesc",
+			b.amount as "amount",
+			b.unit_price as "unitPrice",
+			b.total_amt as "totalAmt"
+		FROM t_product_annotation a,t_product_order_detail b
+		WHERE a.detail_id=b.uid and a.uid = #{uid}
+	</select>
+	
+	<select id="findList" resultType="Annotation" >
+		SELECT 
+			<include refid="annotationColumns"/>
+			,b.product_desc as "productDesc",
+			b.amount as "amount",
+			b.unit_price as "unitPrice",
+			b.total_amt as "totalAmt"
+		FROM t_product_annotation a,t_product_order_detail b				
+		<where>
+		    a.detail_id=b.uid
+			<!-- <if test="quotationCode != null and quotationCode != ''">
+				AND a.quotation_code = #{quotationCode}
+			</if>
+			<if test="beginQuotationDate != null and endQuotationDate != null and beginQuotationDate != '' and endQuotationDate != ''">
+				AND a.quotation_date BETWEEN #{beginQuotationDate} AND #{endQuotationDate}
+			</if> -->
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	<select id="findAllList" resultType="Annotation" >
+		SELECT 
+			<include refid="annotationColumns"/>
+			,b.product_desc as "productDesc",
+			b.amount as "amount",
+			b.unit_price as "unitPrice",
+			b.total_amt as "totalAmt",
+		FROM t_product_annotation a,t_product_order_detai b
+		<where>
+			a.detail_id=b.uid
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="getListByDetailIds" parameterType="java.util.Map" resultType="Annotation">  
+	   SELECT
+			<include refid="annotationColumns"/>
+		FROM t_product_annotation a
+	    WHERE 1 = 1
+	    and a.quotation_code = #{quotationCode}
+	    <if test='list != null and list.size() > 0'>
+		    and a.detail_id in
+		    <foreach collection="list" index="index" item="item"  open="(" separator="," close=")">
+		        #{item}
+		    </foreach>
+	    </if>
+	</select>
+
+	<insert id="insert">	
+		INSERT INTO t_product_annotation(	
+			is_master,
+			quotation_code,
+			detail_id,
+			anno_name,
+			anno_type,
+			anno_price,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			state,
+			remark
+		) VALUES (
+			#{isMaster},
+			#{quotationCode},
+			#{detailId},
+			#{annoName},
+			#{annoType},
+			#{annoPrice},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{state},
+			#{remark}
+		)		
+	</insert>
+	
+	<update id="update">
+		UPDATE t_product_annotation SET 	
+			anno_name = #{annoName}
+		WHERE uid = #{uid}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_annotation
+		WHERE uid = #{uid}
+	</update>
+	
+	<!--物理删除-->
+	<update id="deleteByQuotationCode">
+		DELETE FROM t_product_annotation
+		WHERE quotation_code = #{quotationCode}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE t_product_annotation SET 
+			state = #{DEL_FLAG_DELETE}
+		WHERE uid = #{uid}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="Annotation" statementType="STATEMENT">
+		select * FROM t_product_annotation  where ${propertyName} = '${value}'
+	</select>
+	
+</mapper>

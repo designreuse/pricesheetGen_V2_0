@@ -1,0 +1,452 @@
+
+<style type="text/css">
+div {
+	font-family: 'Microsoft YaHei' ! important;
+	color: block ! important;
+}
+
+#tab tr td {
+	border: 1px solid;
+}
+
+#top {
+	width: 100%;
+	border-bottom: 2px solid #000;
+	background-color: #fff;
+	font-size: 13px;
+	position: fixed;
+	top: 0;
+	_position: relative;
+	z-index: 100;
+	_top: expression(offsetParent.scrollTop +0);
+	height: 35px;
+}
+ 
+.assd {
+	z-index: 55 ! important;
+	position: absolute ! important;
+	background-color: #fff;
+}
+.a{
+	background:#bdbdbd;
+} 
+</style>
+
+
+
+<script type="text/javascript">
+	/*
+	 * 获取标准的年月日格式
+	 * 返回的格式yyyy-mm-dd
+	 */
+	function getNowFormatDate() {
+		var seperator1 = "-";
+		var seperator2 = ":";
+		var date = new Date();
+		var month = date.getMonth() + 1;
+
+		var strDate = date.getDate();
+		if (month >= 1 && month <= 9) {
+			month = "0" + month;
+		}
+
+		if (strDate >= 0 && strDate <= 9) {
+			strDate = "0" + strDate;
+		}
+
+		return date.getFullYear() + seperator1 + month + seperator1 + strDate;
+	}
+
+</script>
+ <div id="bg" style="background-color: #ccc;width: 100%;position:absolute;opacity: 0.5;z-index: 10;"></div>  
+ <div id="top"
+	style="background-color: #003334; color: #ffffff; line-height: 35px;">
+	<div>
+		<div class="col-sm-6"></div>
+		<div class="col-sm-5" style="padding: 0px;">
+			<div class="col-sm-3">Hi,欢迎光临！</div>
+			<div class="col-sm-2"  ng-click="toMessage()" >
+				<img src="images/u19.png" width="15px;"  />&nbsp;&nbsp;消息
+			</div>
+			<div class="col-sm-2 "  ng-click="toMine()" id="mine" >
+				<img src="images/u29.png" width="15px;" />&nbsp;&nbsp;我的
+				<div style="position:absolute;background-color: #ededed;top:35px;z-index: 10;display: none;color:black;" id="mineD">
+					<div style="border-bottom : 1px solid; height:30px;line-height: 30px;width: 80px;text-align: center;"  ng-click="toPersenHtml()"  >个人资料 </div>
+					<div style="height:30px;line-height: 30px;text-align: center; "  ng-click="toMessage()" >历史记录</div>
+				</div>
+			</div>
+			<div class="col-sm-3" ng-click="loginOrQuit()">退出登录</div>
+			<div class="col-sm-2" ng-click="aboutUs()" >关于我们</div>
+		</div>
+	</div>
+</div>
+<div style="padding-top: 50px;">
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
+		<div class="col-sm-12">
+					<div style="height:50px;">当前位置：消息->查看</div>
+		</div>
+		<div class="col-sm-7"
+			style="height: 100px; line-height: 100px; text-align: left;">
+			<img src="common/login/images/logo.png" style="width: 280px">
+		</div>
+		<div class="col-sm-5"
+			style="height: 100px; line-height: 100px; text-align: center;">
+			<img src="common/login/images/image005.png" style="width: 200px">
+		</div>
+	</div>
+</div>
+<div class="col-sm-12">
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
+		<form name="myForm">
+			<div id="headDivId" class="col-sm-12">
+				<div  class="col-sm-12" style="height:25px;padding:0px;">
+					<div id="topDiv"  class="assd" style="height: 25px; line-height: 25px;width:50%; background-color: #008080; text-align: left;  font-weight: bold; margin-bottom: 3px;">
+						尊敬的客户，您好！兹对贵司需求报价如下： 
+					</div>
+				</div>
+				<div class="col-sm-6" style="height: 125px;padding:0px;">
+					<div class="assd  col-sm-12" id="left">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4"
+								style="text-align: right; line-height: 25px;">至： </label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type="text" readonly="readonly" ng-model="custName"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;"
+									id="custName" name="custName"/>
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">客户公司：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type="text" id="company" name="company"   ng-model="company"  readonly="readonly"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;" />
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">联系电话：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type="text" id="companyPhone" name="companyPhone"  ng-model="companyPhone"  readonly="readonly"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;" />
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">联系传真：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type="text" id="companyFax" name="companyFax"   ng-model="companyFax"  readonly="readonly"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;" />
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">报价关于：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type=text name="quotationAbout"  id="quotationAbout"  ng-model="quotationAbout"  readonly="readonly"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-6" style="height: 125px;padding:0px;">
+					<div class="col-sm-12" id="right" style="text-align: right; margin-left: 50px;">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4"
+								style="text-align: right; line-height: 25px;">报价日期：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input id="quotationDateStr" name="quotationDateStr" type="text"
+									readonly="readonly" maxlength="20" class="input-medium Wdate"  ng-model="quotationDateStr"  
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;"
+									pattern="yyyy-MM-dd"
+									onclick="WdatePicker({dateFmt:'yyyy-MM-dd'});" />
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">报价单号：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<input type="text" name="quotationCode" readonly="readonly"  ng-model="quotationCode"  
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black; text-align: center;" />
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">结算币种：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<select id="settlementType" name="settlementType"   ng-model="settlementType"  disabled="disabled"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black;">
+									<option value="">请选择</option>
+									<option value="RMB">人民币</option>
+									<option value="USD">美元</option>
+									<option value="EUR">欧元</option>
+									<option value="GBP">英镑</option>
+									<option value="JPY">日元</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">付款方式：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<select id="payType" name="payType"   ng-model="payType"  disabled="disabled"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black;">
+									<option value="">请选择</option>
+									<option value="001">现金</option>
+									<option value="002">支票</option>
+									<option value="003">转账</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
+							<label class="col-sm-4 control-label"
+								style="text-align: right; line-height: 25px;">销售人员：</label>
+							<div class="col-sm-8" style="height: 25px; text-align: left;">
+								<select id="staffId" name="staffId" ng-model="staffId"  disabled="disabled"
+									style="border: 0px; border-bottom: 1px solid; width: 95%; height: 100%; color: black;">
+									<option value="">请选择</option>
+									<option value="a8196df87a9a40dfa4543b49d64c0759">李四</option>
+									<option value="a8196df87a9a40dfa4543b49d64c0759">张三</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-12" style="padding: 0px;padding-top:30px;">
+				<div id="bottom" class="col-sm-12"  style="padding: 0px;">
+					<div id='mainDivId' >
+						<table width="100%">
+							<tr style="background-color: #008080; color: black;">
+								<th style="text-align: left; width: 100%;">项目总价(大写)：</th>
+							</tr>
+						</table>
+						<table width="100%" id="tab" style="text-align: center;font-size: 14px;" border="1">
+							<tr>
+								<td style="text-align: left;">{{orderTitle}}</td>
+								<td style="text-align: right; width: 20%;">RMB：</td>
+								<td style="text-align: left; width: 25%;"></td>
+							</tr>
+						</table>
+						<div id='area_sumAmount' style="width: 100%;">
+							<table width="100%" style="text-align: center;font-size: 14px;">
+								<tr>
+									<td
+										style="text-align: right; width: 75%; border-left: 1px solid black; height: 30px;">含税总价(RMB)：</td>
+									<td style="text-align: right; border-right: 1px solid black;">
+										{{withTaxAmt}}
+									</td>
+								</tr>
+								<tr>
+									<td style="text-align: right; border-left: 1px solid black;">优惠(RMB):</td>
+									<td style="text-align: left; border-right: 1px solid black;">
+										<input type="text" id="privilegeAmt" name="privilegeAmt" ng-model="privilegeAmt" value="0" style="text-align: right; border: 0px; width: 100%" />
+									</td>
+								</tr>
+								<tr>
+									<td
+										style="text-align: right; border: 1px solid black; border-top: 0px; border-right: 0px;">最终价格(RMB):</td>
+									<td
+										style="text-align: right; border: 1px solid black; border-top: 0px; border-left: 0px;">{{total}}</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div id='subDivId' >
+						<div ng-repeat="tableDetail in order_list">
+							<table width="100%" style="text-align: center;" border="1">
+								<tr style="background-color: #008080; color: black;">
+									<th style="text-align: left; width: 100%;">{{tableDetail.title}}</th>
+								</tr>
+								<tr>
+									<td>序号</td>
+									<td>产品名称</td>
+									<td>产品描述</td>
+									<td>单位</td>
+									<td>数量</td>
+									<td>单价（人名币）</td>
+									<td>金额（人名币）</td>
+								</tr>
+								<tr ng-repeat="orderDetail in tableDetail">
+									<td>{{orderDetail.orderNo}}</td>
+									<td>{{orderDetail.productName}}</td>
+									<td>{{orderDetail.productDesc}}</td>
+									<td>{{orderDetail.unin}}</td>
+									<td>{{orderDetail.amount}}</td>
+									<td>{{orderDetail.unitPrice}}</td>
+									<td>{{orderDetail.totalAmt}}</td>	
+								</tr>
+								<tr>
+									<td colspan="6" style="text-align: right;padding-right:20px;">小计 </td>
+									<td id="subSumAmt">{{tableDetail.sumAmt}}</td>
+								</tr>
+							</table>
+						</div>	
+					</div>
+		
+					<div>
+						<div class="col-sm-7" style="margin-top: 20px;">
+							<div style="text-align: left; font-weight: bold;">备注：</div>
+							<div style="text-align: left; padding-left: 20px;">1、报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</div>
+							<div style="text-align: left; padding-left: 20px;">2、报价有效期：5个工作日</div>
+							<div style="text-align: left; padding-left: 20px;" id="arrivalDays">
+								3、到货时间：报价单签字确认回传合同签订后 <input type=text name="arrivalDays"
+									value="5"
+									style="width: 50px; align: center; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />个工作日
+							</div>
+							<div style="text-align: left; padding-left: 20px;">4、付款期限：</div>
+							<div style="text-align: left; padding-left: 100px;">
+								<input type="radio" name="deliveryMode" id="radio" value="001">款到发货.
+							</div>
+							<div style="text-align: left; padding-left: 100px;">
+								<input type="radio" name="deliveryMode" id="radio" value="002"
+									checked="checked" />货到<input type="text" id="waitDays"
+									name="waitDays" value="7"
+									style="width: 50px; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />
+								工作日(现金、支票、转账)付款。
+							</div>
+							<div style="text-align: left; padding-left: 100px;">
+								<input type="radio" name="deliveryMode" id="radio" value="003" />其他<input
+									type="text" id="otherChoice" name="otherChoice"
+									style="width: 300px; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />。
+							</div>
+						</div>
+						<div class="col-sm-5">
+							<div
+								style="text-align: left; font-weight: bold; font-size: 22px; padding-top: 50px;">客户签名(签章):</div>
+							<div style="text-align: left; padding-top: 75px">
+								<hr
+									style="height: 3px; border: none; border-top: 3px double black;" />
+							</div>
+						</div>
+					</div>
+					<div>
+						<div class="col-sm-12" style="height: 25px;">
+							<hr
+								style="height: 3px; border: none; border-top: 3px double black;" />
+						</div>
+					</div>
+					<div>
+						<div class="col-sm-7">
+							<div style="text-align: left">地址:上海市杨浦区黄兴路1号中通大厦1楼北侧铺(眉州支路92-96号)</div>
+							<div style="text-align: left">
+								电话:021-65435161<label style="width: 30px;"> </label>传真:65435240
+							</div>
+							<div style="text-align: left">
+								手机 13311763209<label style="width: 30px;"> </label>
+								E-mail：gongquan.xie@sh-sapling.com
+							</div>
+							<div>
+								<br> <br>
+							</div>
+							<div style="text-align: left">开户名称：上海小树信息技术有限公司</div>
+							<div style="text-align: left">收款银行：中国银行上海市五角场支行</div>
+							<div style="text-align: left">收款账号：457265792109</div>
+						</div>
+						<div class="col-sm-5">
+							<div style="font-weight: bold; font-size: 22px;">Best
+								Regards!</div>
+							<div
+								style="font-weight: bold; font-size: 25px; height: 80px; line-height: 80px;">{{staffName}}</div>
+							<div style="height: 3px;">
+								<hr
+									style="height: 3px; border: none; border-top: 3px double black;" />
+							</div>
+							<div>如有任何疑问请即时与我联系!</div>
+						</div>
+					</div>
+					<div class="row" id="submitId" align="center">
+						<div class="col-sm-12">
+							<input id="back" class="btn" type="button"  onclick="javascript:history.go(-1)"
+								value="返回" /> <input id="editor"
+								class="btn" type="button" value="编辑" />
+						</div>
+					</div>
+				</div>	
+			</div>	
+		</form>
+	</div>
+	<div class="col-sm-2"></div>
+</div>
+<div class="modal " id="quietModel" tabindex="-1" role="dialog" style="top:35px;;background: #ffffff;"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm" style="padding-top:100px;">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #F2F2F2">
+					<h4 class="modal-title">温馨提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>是否退出此页面?</p>
+					<div style="text-align: center;">
+						<button type="button" class="btn btn btn-info btn-sm"
+							id="delButton" value="" ng-click="quietHtml()">确定</button>
+						<button type="button" class="btn btn btn-info btn-sm"
+							data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<script type="text/javascript">
+	$(function() {
+		jQuery(".loginInboxClick").click(function() {
+			jQuery("#loginIndex").show(1000);
+			jQuery("#signupBox").hide(1000);
+		});
+		jQuery(".signupInboxClick").click(function() {
+			jQuery("#signupBox").show(1000);
+			jQuery("#loginIndex").hide(1000);
+		});
+	})
+	// 初始化客户信息
+
+	var curStdFmtDate = getNowFormatDate(); // 设置当前报价日期
+	$("#quotationDateStr").val(curStdFmtDate);
+
+	$("#settlementType").change(function() {
+		currencyChange();
+	}); // 绑定币种选择
+
+	// 绑定服务组优惠金额事件
+	$("input[name=privilegeAmt]").bind(
+			"blur",
+			function() {
+
+				var withTaxAmt = $("#mainDivId").find("#area_sumAmount").find(
+						"#withTaxAmt").text();
+				var _withTaxAmt = 0;
+
+				if (0 == withTaxAmt.length || isNaN(withTaxAmt)) {
+					alert("请先录入商品！");
+					$(this).val(0);
+					return;
+				} else {
+					_withTaxAmt = parseFloat(withTaxAmt);
+				}
+
+				var _discountAmount = 0
+				if (isNaN($(this).val())) {
+					$(this).val(0);
+				} else {
+					_discountAmount = $(this).val();
+				}
+
+				var _dealAmt = 0;
+				_dealAmt = _withTaxAmt - _discountAmount;
+				if (0 > _dealAmt) {
+					alert("优惠金额不能大于商品总金额！");
+					$(this).val(0);
+					return;
+				} else if (isNaN(_dealAmt)) {
+					alert("优惠金额不能大于商品总金额！！！");
+					return;
+				}
+
+				$("#mainDivId").find("#area_sumAmount").find("#dealAmt").html(
+						_dealAmt.toFixed(2));
+				$("#mainDivId").find("#area_sumAmount").find("#finalAmt").html(
+						_dealAmt.toFixed(2));
+			});
+</script>

@@ -1,0 +1,165 @@
+<style type="text/css">
+.page-list .pagination {float:left;}
+        .page-list .pagination span {cursor: pointer;}
+        .page-list .pagination .separate span{cursor: default; border-top:none;border-bottom:none;}
+        .page-list .pagination .separate span:hover {background: none;}
+        .page-list .page-total {float:left; margin: 25px 20px;}
+        .page-list .page-total input, .page-list .page-total select{height: 26px; border: 1px solid #ddd;}
+        .page-list .page-total input {width: 40px; padding-left:3px;}
+        .page-list .page-total select {width: 50px;}
+div {
+	font-family: 'Microsoft YaHei' ! important;
+	color: block ! important;
+}
+
+#top {
+	width: 100%;
+	border-bottom: 2px solid #000;
+	background-color: #fff;
+	font-size: 13px;
+	position: fixed;
+	top: 0;
+	_position: relative;
+	z-index: 100;
+	_top: expression(offsetParent.scrollTop +0);
+	height: 35px;
+}
+table tr td{
+	text-align: center;
+}
+#top_alert {
+	width: 180px;
+	padding: 10px 0;
+	background: #4A4242;
+	border: 1px solid #4A4242;
+	color: #FFFFFF;
+	position: absolute;
+	text-align: center;
+	left: 50%;
+	top: 30%;
+} 
+.a{
+	background:#bdbdbd;
+} 
+</style>
+
+<div id="top"
+	style="background-color: #003334; color: #ffffff; line-height: 35px;">
+	<div>
+		<div class="col-sm-6"></div>
+		<div class="col-sm-5" style="padding: 0px;">
+			<div class="col-sm-3">Hi,欢迎光临！</div>
+			<div class="col-sm-2" >
+				<img src="images/u19.png" width="15px;"  />&nbsp;&nbsp;消息
+			</div>
+			<div class="col-sm-2 "  ng-click="toMine()" id="mine" >
+				<img src="images/u29.png" width="15px;" />&nbsp;&nbsp;我的
+				<div style="position:absolute;background-color: #ededed;top:35px;z-index: 10;display: none;color:black;" id="mineD">
+					<div style="border-bottom : 1px solid; height:30px;line-height: 30px;width: 80px;text-align: center;"  ng-click="toPersenHtml()"  >个人资料 </div>
+					<div style="height:30px;line-height: 30px;text-align: center; ">历史记录</div>
+				</div>
+			</div>
+			<div class="col-sm-3" ng-click="quitLogin()">退出登录</div>
+			<div class="col-sm-2" ng-click="aboutUs()" >关于我们</div>
+		</div>
+	</div>
+</div>
+<div class="col-sm-12" style="padding-top: 50px;">
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
+		<div class="col-sm-12">
+			<div style="float: left;">当前位置：消息</div>
+			<div style="float: right;">
+				<div style="border-bottom: 1px solid;">
+					<input type="text" style="border: 0px;" /><img
+						src="images/u167.png" width="20px;" />
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-12" style="margin-bottom: 10px;margin-top:10px;">
+			<div style="float: left;">
+				<div style="border: 1px solid;">
+					<img src="images/u167.png" width="20px;" />刷新
+				</div>
+			</div>
+			<div style="float: right;">
+				<button style="border: 0px; border-radus: 3px;">重置</button>
+			</div>
+		</div>
+		<div>
+			<table  class="table table-bordered table-striped table-hover" border="1">
+				<thead>
+					<tr>
+						<td><input type="checkbox" id ="allChecked"/></td>
+						<td>报价单号</td>
+						<td>规格</td>
+						<td>型号</td>
+						<td>价格</td>
+						<td>更新时间</td>
+						<td>销售人员</td>
+						<td>报价关于</td>
+						<td>操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="emp in persons">
+						<td><input type="checkbox" value="" ng-model="orderId" /></td>
+						<td>{{emp.orderId}}</td>
+						<td>{{emp.spfications}}</td>
+						<td>{{emp.model}}</td>
+						<td>{{emp.price}}</td>
+						<td>{{emp.updateTime}}</td>
+						<td>{{emp.saleMan}}</td>
+						<td>{{emp.offerAbout}}</td>
+						<td> <input type="button" ng-click="lookOrderDetail(emp.orderId)" value="查看"><input type="button" value="删除"  ng-click="del(emp.orderId)" /> </td>
+					</tr>
+				</tbody>
+			</table>
+			 <tm-pagination conf="paginationConf"></tm-pagination>
+		</div>
+		
+	</div>
+	<div class="col-sm-2"></div>
+</div>
+<div id="top_alert" style="display: none;">
+		<span></span>
+</div>
+<div class="modal fade" id="deleMode" tabindex="-1" role="dialog" style="top:20%;"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #F2F2F2">
+					<h4 class="modal-title">温馨提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>确定要删除该报价单吗？</p>
+					<div style="text-align: center;">
+						<button type="button" class="btn btn btn-info btn-sm"
+							id="delButton" value="" ng-click="delOrderDetail()">确定</button>
+						<button type="button" class="btn btn btn-info btn-sm"
+							data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+<div class="modal " id="quietModel" tabindex="-1" role="dialog" style="top:35px;;background: #ffffff;"
+		aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-sm" style="padding-top:100px;">
+			<div class="modal-content">
+				<div class="modal-header" style="background-color: #F2F2F2">
+					<h4 class="modal-title">温馨提示</h4>
+				</div>
+				<div class="modal-body">
+					<p>是否退出此页面?</p>
+					<div style="text-align: center;">
+						<button type="button" class="btn btn btn-info btn-sm"
+							id="delButton" value="" ng-click="quietHtml()">确定</button>
+						<button type="button" class="btn btn btn-info btn-sm"
+							data-dismiss="modal">取消</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+

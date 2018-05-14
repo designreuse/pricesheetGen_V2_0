@@ -1,0 +1,102 @@
+#order{
+    width:100%;
+    background-color: #ffffff;
+    padding-top:17.6px;
+    margin-bottom: 10px;
+}
+#order p{
+    font-size:15px;
+    font-weight: 600;
+	color: rgba(0,0,0,0.87);
+    height:13.3px;
+    line-height: 13.3px;
+    text-indent: 16px;
+}
+.order_info{
+    width:100%;
+    background-color: #ffffff;
+    padding: 12px 0px 16.6px 16px;
+}
+.order_info .msg_title{
+	color: rgba(0,0,0,0.87);
+    font-size:13px;
+    font-weight: 600;
+    padding-bottom: 6px;
+}
+
+.order_info .img_coupon{
+    height:72px;
+    width: 150px;
+    display: inline-block;
+    vertical-align: top;
+}
+
+.order_info .right_msg{
+    height:72px;
+    display: inline-block;
+    padding: 8px 0px 0px 11.6px ;
+}
+.order_info .right_msg p{
+    height:10.6px;
+    line-height:10.6px;
+	color: rgba(0,0,0,0.87);
+    font-size:13px;
+    font-weight: 600;
+}
+.order_info .right_msg p span{
+    padding-left: 12px;
+}
+#show_code{
+    border-top: 1px solid #dcdcdc;
+    padding-top: 16.6px;
+
+}
+#show_code p:first-child{
+    font-size:15px;
+	color: rgba(0,0,0,0.54);
+    color:#aaaaaa;
+}
+#show_code p:last-child{
+    font-size:21px;
+    font-weight: 600;
+	color: rgba(0,0,0,1);
+    margin-top: 20px;
+}
+#btn_pay,#btn_applyRefund,#btn_cancel,#btn_refund,#btn_cancelApplyRefund{
+    display: block;
+    width:91%;
+    height:40px;
+    line-height: 40px;
+    background-color: #D32F2F;
+    color:#ffffff;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px auto;
+    margin-top:33px;
+}
+.largeContent{
+    width:100%;
+    height:192px;
+}
+.smallContent{
+    width:100%;
+    height:183px;
+}
+#div_refund{
+	margin-top: 20px;
+    width: 100%;
+}
+#applyReason{
+    border:0;
+    width:100%;
+    height:100px;
+    max-height:100px;
+    resize: none;
+	font-size:15px;
+	text-indent: 5px;
+	background-color: #ffffff;
+	border-bottom:1px solid #c0c0c0;
+	rgba(0,0,0,0.54);
+	padding-top: 8px;
+}

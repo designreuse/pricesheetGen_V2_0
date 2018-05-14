@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.quotation.dao.QuotationOrderDetailDao">
+    
+	<sql id="quotationOrderDetailColumns">
+		a.uid AS "uid",
+		a.quotation_code AS "quotationCode",
+		a.product_type AS "productType",
+		a.order_no AS "orderNo",
+		a.product_name AS "productName",
+		a.product_desc AS "productDesc",
+		a.unin AS "unin",
+		a.amount AS "amount",
+		a.unit_price AS "unitPrice",
+		a.total_amt AS "totalAmt",
+		a.create_date AS "createDate",
+		a.create_by AS "createBy.id",
+		a.update_date AS "updateDate",
+		a.update_by AS "updateBy.id",
+		a.status AS "status"
+	</sql>
+	
+	<sql id="quotationOrderDetailJoins">
+	</sql>
+	
+    
+	<select id="get" resultType="QuotationOrderDetail" >
+		SELECT 
+			<include refid="quotationOrderDetailColumns"/>
+		FROM t_product_order_detail a
+		<include refid="quotationOrderDetailJoins"/>
+		WHERE a.uid = #{uid}
+	</select>
+	
+	<select id="findList" resultType="QuotationOrderDetail" >
+		SELECT 
+			<include refid="quotationOrderDetailColumns"/>
+		FROM t_product_order_detail a
+		<include refid="quotationOrderDetailJoins"/>
+		<where>
+			
+			<if test="productName != null and productName != ''">
+				AND a.product_name = #{productName}
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="QuotationOrderDetail" >
+		SELECT 
+			<include refid="quotationOrderDetailColumns"/>
+		FROM t_product_order_detail a
+		<include refid="quotationOrderDetailJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO t_product_order_detail(
+			quotation_code,
+			product_type,
+			order_no,
+			product_name,
+			product_desc,
+			unin,
+			amount,
+			unit_price,
+			total_amt,
+			create_date,
+			create_by,
+			update_date,
+			update_by,
+			status
+		) VALUES (
+			#{quotationCode},
+			#{productType},
+			#{orderNo},
+			#{productName},
+			#{productDesc},
+			#{unin},
+			#{amount},
+			#{unitPrice},
+			#{totalAmt},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id},
+			#{status}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE t_product_order_detail SET 	
+			quotation_code = #{quotationCode},
+			product_type = #{productType},
+			order_no = #{orderNo},
+			product_name = #{productName},
+			product_desc = #{productDesc},
+			unin = #{unin},
+			amount = #{amount},
+			unit_price = #{unitPrice},
+			total_amt = #{totalAmt},
+			update_date = #{updateDate},
+			update_by = #{updateBy.id},
+			status = #{status}
+		WHERE uid = #{uid}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_order_detail
+		WHERE uid = #{uid}
+	</update>
+	
+	<!--逻辑删除-->
+	<update id="deleteByLogic">
+		UPDATE t_product_order_detail SET 
+			del_flag = #{DEL_FLAG_DELETE}
+		WHERE uid = #{uid}
+	</update>
+	
+	
+	<!-- 根据实体名称和字段名称和字段值获取唯一记录 -->
+	<select id="findUniqueByProperty" resultType="QuotationOrderDetail" statementType="STATEMENT">
+		select * FROM t_product_order_detail  where ${propertyName} = '${value}'
+	</select>
+	
+	<select id="findListByquotationCode" resultType="String">
+		SELECT 
+			*
+		FROM t_product_order a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="QuotationOrder != null and QuotationOrder != ''">
+				AND a.QuotationOrder LIKE 
+				<if test="dbName == 'oracle'">#{QuotationOrder}||'%'</if>
+				<if test="dbName == 'mssql'">#{QuotationOrder}+'%'</if>
+				<if test="dbName == 'mysql'">concat(#{QuotationOrder},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<delete id="deleteByQuotCode" parameterType="java.lang.String" >
+	  delete from t_product_order_detail
+	  where quotation_code = #{quotationCode,jdbcType=VARCHAR}
+	</delete>
+	
+	<select id="selectByQuotId"  resultType="QuotationOrderDetail"  parameterType="java.lang.String" >
+	    select 
+  		<include refid="quotationOrderDetailColumns"/>
+	    from t_product_order_detail a
+	    where 
+	    quotation_code = (select  quotation_code  from t_product_order where id = #{orderId,jdbcType=CHAR} )
+  	</select>
+	
+</mapper>

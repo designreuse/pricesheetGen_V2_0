@@ -1,0 +1,43 @@
+﻿#shop_body{
+    width:100%;
+    background-color: #f3f3f3;
+}
+#shop_header{
+    width:100%;
+}
+#shop_top{
+    width:100%;
+    height:40px;
+    text-align: center;
+    background-color: #D32F2F;
+}
+#shop_top #shop_title{
+    font-size: 17px;
+    font-weight: bold;
+    color:white;
+    line-height: 40px;
+}
+#shop_well{
+    width: 100%;
+    height: 185px;
+    background-color: #f44336;
+    text-align: center;
+}
+#shop_well #user_pic{
+    width: 65px;
+    height:65px;
+    margin: 34px 0px 45px 0px;
+}
+#action_login,#action_register{
+    font-size: 17px;
+    font-weight: bold;
+	color: rgba(0,0,0,0.87);
+    display: block;
+    width: 50%;
+    height:40px;
+    float: left;
+}
+#shop_content{
+    width:100%;
+    height:350px;
+}

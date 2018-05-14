@@ -1,0 +1,205 @@
+﻿/*改变input的placeholder属性*/
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: #999;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: #999;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: #999;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: #999;
+}
+
+/********阴影效果*******
+    基本语法是{box-shadow:[inset] x-offset y-offset blur-radius spread-radius color}
+         对象选择器 {box-shadow:[投影方式] X轴偏移量 Y轴偏移量 阴影模糊半径 阴影扩展半径 阴影颜色}*/
+.box-shadow {
+    /*Firefox4.0-*/
+    -moz-box-shadow: 0px 3px 3px #c0c0c0; /*底边阴影*/
+
+    /*Safariand Google chrome10.0-*/
+    -webkit-box-shadow: 0px 3px 3px #c0c0c0; /*底边阴影*/
+
+    /*Firefox4.0+、 Google chrome 10.0+ 、 Oprea10.5+ and IE9*/
+    box-shadow: 0px 3px 3px #c0c0c0; /*底边阴影*/
+}
+
+/************** CSS3 圆角按钮 start************/
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 10px;
+    padding: 0 20px;
+    text-align: center;
+    text-decoration: none;
+    font: bold 12px/25px Arial, sans-serif;
+ 
+    text-shadow: 1px 1px 1px rgba(255,255,255, .22);
+ 
+    -webkit-border-radius: 30px;
+    -moz-border-radius: 30px;
+    border-radius: 30px;
+ 
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+    box-shadow: 1px 1px 1px rgba(0,0,0, .29), inset 1px 1px 1px rgba(255,255,255, .44);
+ 
+    -webkit-transition: all 0.15s ease;
+    -moz-transition: all 0.15s ease;
+    -o-transition: all 0.15s ease;
+    -ms-transition: all 0.15s ease;
+    transition: all 0.15s ease;
+}
+
+.button:hover {
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,.29), inset 0px 0px 2px rgba(0,0,0, .5);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,.29), inset 0px 0px 2px rgba(0,0,0, .5);
+    box-shadow: 1px 1px 1px rgba(0,0,0,.29), inset 0px 0px 2px rgba(0,0,0, .5);
+}
+.button:active {
+    -webkit-box-shadow: inset 0px 0px 3px rgba(0,0,0, .8);
+    -moz-box-shadow: inset 0px 0px 3px rgba(0,0,0, .8);
+    box-shadow: inset 0px 0px 3px rgba(0,0,0, .8);
+}
+
+/* Big Button Style */
+ 
+.big {
+    padding: 0 40px;
+    padding-top: 10px;
+    height: 45px;
+    text-transform: uppercase;
+    font: bold 20px/22px Arial, sans-serif;
+}
+ 
+.big span {
+    display: block;
+    text-transform: none;
+    font: italic normal 12px/18px Georgia, sans-serif;
+    text-shadow: 1px 1px 1px rgba(255,255,255, .12);
+}
+
+/*按钮颜色类*/
+
+/* Green Color */
+.green {
+    color: #3e5706;
+    background: #a5cd4e; /* Old browsers */
+    background: -moz-linear-gradient(top,  #a5cd4e 0%, #6b8f1a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a5cd4e), color-stop(100%,#6b8f1a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #a5cd4e 0%,#6b8f1a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #a5cd4e 0%,#6b8f1a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #a5cd4e 0%,#6b8f1a 100%); /* IE10+ */
+    background: linear-gradient(top,  #a5cd4e 0%,#6b8f1a 100%); /* W3C */
+}
+ 
+/* Blue Color */
+.blue {
+    color: #19667d;
+    background: #70c9e3; /* Old browsers */
+    background: -moz-linear-gradient(top,  #70c9e3 0%, #39a0be 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#70c9e3), color-stop(100%,#39a0be)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #70c9e3 0%,#39a0be 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #70c9e3 0%,#39a0be 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #70c9e3 0%,#39a0be 100%); /* IE10+ */
+    background: linear-gradient(top,  #70c9e3 0%,#39a0be 100%); /* W3C */
+}
+ 
+/* Gray Color */
+.gray {
+    color: #515151;
+    background: #d3d3d3; /* Old browsers */
+    background: -moz-linear-gradient(top,  #d3d3d3 0%, #8a8a8a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d3d3d3), color-stop(100%,#8a8a8a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #d3d3d3 0%,#8a8a8a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #d3d3d3 0%,#8a8a8a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #d3d3d3 0%,#8a8a8a 100%); /* IE10+ */
+    background: linear-gradient(top,  #d3d3d3 0%,#8a8a8a 100%); /* W3C */
+}
+
+/* Black Color */
+.black{
+    color: #000000;
+    background: #ffffff;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #8a8a8a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#8a8a8a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#8a8a8a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #ffffff 0%,#8a8a8a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #ffffff 0%,#8a8a8a 100%); /* IE10+ */
+    background: linear-gradient(top,  #ffffff 0%,#8a8a8a 100%); /* W3C */
+}
+
+/* Red Color */
+.red{
+    color: #c80000;
+    background: #f7e1e1;
+    background: -moz-linear-gradient(top,  #f7e1e1 0%, #8a8a8a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f7e1e1), color-stop(100%,#8a8a8a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #f7e1e1 0%,#8a8a8a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #f7e1e1 0%,#8a8a8a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #f7e1e1 0%,#8a8a8a 100%); /* IE10+ */
+    background: linear-gradient(top,  #f7e1e1 0%,#8a8a8a 100%); /* W3C */
+}
+
+/* White Color */
+.white{
+    color: #ffffff;
+    background: #a19e9e;
+    background: -moz-linear-gradient(top,  #a19e9e 0%, #8a8a8a 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#a19e9e), color-stop(100%,#8a8a8a)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top,  #a19e9e 0%,#8a8a8a 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top,  #a19e9e 0%,#8a8a8a 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top,  #a19e9e 0%,#8a8a8a 100%); /* IE10+ */
+    background: linear-gradient(top,  #a19e9e 0%,#8a8a8a 100%); /* W3C */
+}
+/************** CSS3 圆角按钮  end************/
+
+
+/*shop_title*/
+.shop_body{
+    width:100%;
+    background-color: #f3f3f3;
+}
+.shop_header{
+    width:100%;
+}
+.shop_top{
+    width:100%;
+    height:40px;
+    background-color: #D32F2F;
+}
+.shop_top .action_back{
+	height:40px;
+    line-height: 40px;
+    width:12%;
+    display: inline-block;
+}
+
+.action_back img{
+	height: 14px;
+	margin-left:28px;
+}
+.shop_top .shop_title{
+	height:40px;
+    line-height: 40px;
+    width:76%;
+    display: inline-block;
+}
+.shop_title p{
+    text-align: center;
+    height:40px;
+    line-height: 40px;
+    font-size: 17px;
+    color:white;
+    margin:0;
+    padding:0;
+    vertical-align: middle;
+}
+.border_test{
+    border: 1px solid green;
+}
+.border_black{
+    border: 1px solid #000000;
+}

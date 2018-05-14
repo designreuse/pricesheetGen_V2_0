@@ -1,0 +1,86 @@
+#shop_middle{
+    width:100%;
+    height:49px;
+    line-height:49px;
+    background-color: #ffffff;
+    margin-bottom: 10px;
+    font-size:15px;
+	rgba(0,0,0,0.87);
+    padding-left: 16px;
+}
+
+#shop_bankcard{
+    width:100%;
+    background-color: #ffffff;
+}
+#msg_title{
+	rgba(0,0,0,0.87);
+    font-size:15px;
+    font-weight: bold;
+    height:42px;
+    line-height: 42px;
+    padding-left:16px;
+}
+#msg_bindbank{
+    margin-bottom: 18px;
+    padding-bottom:8px;
+}
+#msg_card{
+	rgba(0,0,0,0.87);
+    background-color: #ffffff;
+    font-size:15px;
+    height:42px;
+    line-height: 42px;
+    padding-left:46.6px;
+    width:78%;
+    display: inline-block;
+}
+#btn_modify{
+    width:20%;
+    height:42px;
+    line-height: 42px;
+    background-color: #ffffff;
+    color:#d32f2f;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+    display: inline-block;
+}
+#bank_card_no{
+    border:0;
+    width:100%;
+    height:25px;
+    line-height:14px;
+    text-indent: 8px;
+	font-size:15px;
+}
+#div_bank_card_no{
+    border-bottom:1px solid #c0c0c0;
+	rgba(0,0,0,0.54);
+    font-size:15px;
+    height:25px;
+    line-height:14px;
+    width: 91%;
+    margin: 0px auto;
+}
+#btn_ensure{
+    display: block;
+    width:91%;
+    height:40px;
+    line-height: 40px;
+    background-color: #D32F2F;
+    color:#ffffff;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px auto;
+    margin-top:33px;
+}
+.largeContent{
+    width:100%;
+    height:407px;
+}
+.smallContent{
+    width:100%;
+    height:272px;
+}

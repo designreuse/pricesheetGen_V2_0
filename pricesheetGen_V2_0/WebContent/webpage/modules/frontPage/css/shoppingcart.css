@@ -1,0 +1,145 @@
+.main_centent{
+    padding:0px 16px;
+    padding-bottom:150px;
+}
+.msg_top{
+    width: 100%;
+    font-size:13px;
+    rgba(0,0,0,0.87);
+    font-weight: bold;
+    text-align: center;
+    height:33px;
+    line-height:33px;
+}
+.product_img{
+    width:100%;
+}
+.product_img img{
+    width:100%;
+    height: 113px;
+    margin-bottom: 10px;
+}
+.product_info{
+    width:100%;
+    margin-bottom: 8px;
+}
+.product_info_div1{
+    overflow: hidden;
+    font-size:18px;
+    font-weight: 500;
+    rgba(0,0,0,0.87);
+    height:36px;
+    line-height:36px;
+    padding-left: 16px;
+    
+}
+.product_info_div1 div{
+    float: left;
+    display: inline-block;
+}
+.product_info_div1_name{
+    width:60%;
+}
+.product_price{
+    width:40%;
+    text-align: right;
+    padding-right: 17px;
+}
+.product_info_div2{
+    font-size:15px;
+    font-weight: 500;
+    rgba(0,0,0,0.87);
+    height:32px;
+    line-height:32px;
+    overflow: hidden;
+    padding-left: 16px;
+}
+.product_info_div2 div{
+    float: left;
+}
+.product_info_div2_1{
+    margin-right: 20px;
+}
+.action_jian,.action_jia{
+    width:70px;
+    height: 32px;
+    background-color: #ffffff;
+    text-align: center;
+    cursor: pointer;
+}
+.buy_count{
+    margin:0px 20px;
+}
+#btn_buy{
+    display: block;
+    height:40px;
+    line-height: 40px;
+    background-color: #D32F2F;
+    color:#ffffff;
+    font-size:15px;
+    font-weight: bold;
+    text-align: center;
+    margin: 0px auto;
+    margin:24px 0px ;
+}
+.product_info_div3{
+	font-size:15px;
+    font-weight: 500;
+    rgba(0,0,0,0.87);
+    height:32px;
+    line-height:32px;
+    text-align: right;
+    overflow: hidden;
+    padding-left: 16px;
+}
+.product_info_div3 .action_del{
+	width:70px;
+    height: 32px;
+    text-align: center;
+    cursor: pointer;
+    float: right;
+}
+.cart_caozuo{
+	font-size:15px;
+    font-weight: 500;
+    rgba(0,0,0,0.87);
+    height:32px;
+    line-height:32px;
+    text-align: right;
+    overflow: hidden;
+}
+.cart_caozuo .action_empty{
+	width:110px;
+    height: 32px;
+    text-align: center;
+    cursor: pointer;
+    float: right;
+}
+.cart_empty{
+	text-align:center; 
+	padding:106px 0px 314px 0px;
+}
+.cart_empty img{
+	width:65px;
+	height:65px;
+	margin:0px auto;
+}
+.cart_empty .cart_empty_div1{
+	color:#aaaaaa;
+	font-size: 13px;
+	rgba(0,0,0,0.54);
+	height:42px;
+	line-height: 42px;
+	margin:0px auto;
+	text-align: center;
+}
+
+.action_ggb{
+	color:#000000;
+	font-size: 13px;
+	rgba(0,0,0,0.87);
+	height:25px;
+	line-height: 24px;
+	padding:0 24px;
+	
+}

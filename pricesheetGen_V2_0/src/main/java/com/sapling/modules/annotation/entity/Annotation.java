@@ -18,9 +18,18 @@ public class Annotation extends DataEntity<Annotation> {
 	 */
 	private Long uid;
 	/**
+	 * 报价单Id
+	 */
+	private String  orderId;
+	/**
 	 * 报价单明细id
 	 */
 	private Long detailId;
+	/**
+	 * 
+	 */
+	private String classfiyName;
+
 	/**
 	 * 品牌
 	 */
@@ -65,6 +74,9 @@ public class Annotation extends DataEntity<Annotation> {
 	 * 备注
 	 */
 	private String remark;	
+	
+	
+	private String  pId; //商品ID
 
 	public Long getUid() {
 		return uid;
@@ -74,6 +86,14 @@ public class Annotation extends DataEntity<Annotation> {
 		this.uid = uid;
 	}	
 	
+	public String getOrderId() {
+		return orderId;
+	}
+
+	public void setOrderId(String orderId) {
+		this.orderId = orderId;
+	}
+
 	public Annotation() {
 		super();
 	}
@@ -88,6 +108,14 @@ public class Annotation extends DataEntity<Annotation> {
 
 	public void setDetailId(Long detailId) {
 		this.detailId = detailId;
+	}
+
+	public String getClassfiyName() {
+		return classfiyName;
+	}
+
+	public void setClassfiyName(String classfiyName) {
+		this.classfiyName = classfiyName;
 	}
 
 	public String getAnnoName() {
@@ -168,5 +196,15 @@ public class Annotation extends DataEntity<Annotation> {
 
 	public void setRemark(String remark) {
 		this.remark = remark;
-	}		
+	}
+
+	public String getpId() {
+		return pId;
+	}
+
+	public void setpId(String pId) {
+		this.pId = pId;
+	}	
+	
+	
 }

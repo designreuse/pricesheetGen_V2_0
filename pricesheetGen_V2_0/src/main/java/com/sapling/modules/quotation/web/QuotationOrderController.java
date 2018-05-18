@@ -49,6 +49,7 @@ import com.sapling.modules.sys.utils.UserUtils;
 
 import net.sf.json.JSONObject;
 
+import com.sapling.modules.sys.dao.UserDao;
 import com.sapling.modules.sys.entity.Role;
 
 /**
@@ -62,6 +63,9 @@ public class QuotationOrderController extends BaseController {
 
 	@Autowired
 	private QuotationOrderService quotationOrderService;
+	
+	@Autowired
+	private UserDao userDao;
 
 	@Autowired
 	private QuotationOrderDetailService quotationOrderDetailService;	
@@ -89,6 +93,34 @@ public class QuotationOrderController extends BaseController {
 		return "modules/quotation/quotationOrderList";
 	}
 
+	
+	/**
+	 * 根据OrderId发送邮件
+	 * @param orderId
+	 * @param userId
+	 * @return
+	 * @throws Exception
+	 */
+	@RequiresPermissions("quotation:quotationOrder:sendEmail")
+	@RequestMapping(value = {"sendEmailByOrderId"})
+	public String sendEmailByOrderId(QuotationOrder quotationOrder,RedirectAttributes redirectAttributes) throws Exception {
+		//发送pdf
+		QuotationOrder  order = quotationOrderService.queryQuotationOrderDtl(quotationOrder.getId());
+		
+		quotationOrderService.sendEmailByOrderId(order);
+		addMessage(redirectAttributes, "发送邮件成功");
+		return "redirect:"+Global.getAdminPath()+"/quotation/quotationOrder/list?repage";
+	}
+
+	@RequiresPermissions("quotation:quotationOrder:sendEmail")
+	@RequestMapping(value = {"sendEmailSignPDFByOrderId"})
+	public String sendEmailSignPDFByOrderId(QuotationOrder quotationOrder,RedirectAttributes redirectAttributes) throws Exception {
+		QuotationOrder  order = quotationOrderService.queryQuotationOrderDtl(quotationOrder.getId());
+		
+		quotationOrderService.sendEmailSignPDFByOrderId(order);
+		addMessage(redirectAttributes, "发送邮件成功");
+		return "redirect:"+Global.getAdminPath()+"/quotation/quotationOrder/list?repage";
+	}
 
 	/**
 	 * 功能: 报价单新增页面导航入口
@@ -132,8 +164,12 @@ public class QuotationOrderController extends BaseController {
 	public String show(QuotationOrder quotationQry, Model model) {
 		QuotationOrder quotationRlt = quotationOrderService.queryQuotationOrderDtl(quotationQry.getId());
 		quotationOrderDetailService.sortQuotationOrderDetails(quotationRlt);
+		User user = new User();
+		user.setId(quotationRlt.getStaffId());
+		User user1 = userDao.get(user);
 		model.addAttribute("quotationQry", quotationQry);
 		model.addAttribute("quotationRlt",  quotationRlt);
+		model.addAttribute("user",  user1);
 
 		return "modules/quotation/show";
 	}

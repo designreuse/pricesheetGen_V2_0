@@ -16,9 +16,22 @@ div {
 	_top: expression(offsetParent.scrollTop +0);
 	height: 35px;
 }
-table tr td{
+#bottom {
+	width: 100%;
+	border-bottom: 2px solid #000;
+	background-color: #fff;
+	font-size: 13px;
+	position: fixed;
+	bottom: 0;
+	_position: relative;
+	z-index: 100;
+	_top: expression(offsetParent.scrollTop +0);
+	height: 150px;
+}
+table tr td {
 	text-align: center;
 }
+
 #top_alert {
 	width: 180px;
 	padding: 10px 0;
@@ -29,22 +42,33 @@ table tr td{
 	text-align: center;
 	left: 50%;
 	top: 30%;
-} 
-.personalMesssage div{
+}
+
+.personalMesssage div {
 	height: 30px;
-	line-height:30px;
-	
+	line-height: 30px;
+	text-align: right;
 }
-.personalMesssage div input{
+
+.personalMesssageright div {
+	height: 30px;
+	line-height: 30px;
+	text-align: left;
+}
+ 
+.personalMesssageright  div input {
+	width:75%;
 	height: 20px;
-	line-height:20px;
-	margin-top:5px;
-  	border: 0px;  
-  	border-bottom : 1px solid;  
+	line-height: 20px;
+	margin-top: 5px;
+	border: 0px;
+	border-bottom: 1px solid black;
 }
-.a{
-	background:#bdbdbd;
-} 
+
+
+.a {
+	background: #bdbdbd;
+}
 </style>
 
 <div id="top"
@@ -52,22 +76,26 @@ table tr td{
 	<div>
 		<div class="col-sm-6"></div>
 		<div class="col-sm-5" style="padding: 0px;">
-			<div class="col-sm-3" style="color:white;font-weight:bold;">Hi,欢迎光临！</div>
-<!-- 			<div class="col-sm-2" ng-click="toMessage()"  > -->
-<!-- 				<img src="images/u19.png" width="15px;"  />&nbsp;&nbsp;消息 -->
-<!-- 			</div> -->
+			<div class="col-sm-3" style="color: white; font-weight: bold;">Hi,欢迎光临！</div>
+			<!-- 			<div class="col-sm-2" ng-click="toMessage()"  > -->
+			<!-- 				<img src="images/u19.png" width="15px;"  />&nbsp;&nbsp;消息 -->
+			<!-- 			</div> -->
 			<div class="col-sm-2" ng-click="toFirstHtml()">
-				<a  href="javascript:void(0)" style="color:white;font-weight:bold;" >首页</a>
+				<a href="javascript:void(0)"
+					style="color: white; font-weight: bold;">首页</a>
 			</div>
-<!-- 			<div class="col-sm-2"  ng-click="toPersenHtml()"  > -->
-<!-- 				 <a  class="signupInboxClick" href="javascript:void(0)" style="color:white;font-weight:bold;" >个人资料 </a> -->
-<!-- 				<img src="images/u29.png" width="15px;" />&nbsp;&nbsp;我的 -->
-<!-- 				<div style="position:absolute;background-color: #ededed;top:35px;z-index: 10;display: none;color:black;" id="mineD"> -->
-<!-- 					<div style="height:30px;line-height: 30px;text-align: center; " ng-click="toMessage()" >历史记录</div> -->
-<!-- 				</div> -->
-<!-- 			</div> -->
-			<div class="col-sm-3" ng-click="quitLogin()"> <a  class="signupInboxClick" href="javascript:void(0)" style="color:white;font-weight:bold;" >退出登录</a></div>
-<!-- 			<div class="col-sm-2" ng-click="aboutUs()" >关于我们</div> -->
+			<!-- 			<div class="col-sm-2"  ng-click="toPersenHtml()"  > -->
+			<!-- 				 <a  class="signupInboxClick" href="javascript:void(0)" style="color:white;font-weight:bold;" >个人资料 </a> -->
+			<!-- 				<img src="images/u29.png" width="15px;" />&nbsp;&nbsp;我的 -->
+			<!-- 				<div style="position:absolute;background-color: #ededed;top:35px;z-index: 10;display: none;color:black;" id="mineD"> -->
+			<!-- 					<div style="height:30px;line-height: 30px;text-align: center; " ng-click="toMessage()" >历史记录</div> -->
+			<!-- 				</div> -->
+			<!-- 			</div> -->
+			<div class="col-sm-3" ng-click="quitLogin()" id="quitLogin" style="display: none;">
+				<a class="signupInboxClick" href="javascript:void(0)"
+					style="color: white; font-weight: bold;">退出</a>
+			</div>
+			<!-- 			<div class="col-sm-2" ng-click="aboutUs()" >关于我们</div> -->
 		</div>
 	</div>
 </div>
@@ -75,115 +103,337 @@ table tr td{
 	<div class="col-sm-2"></div>
 	<div class="col-sm-8">
 		<div class="col-sm-12">
-			<div style="float: left;">当前位置：个人资料{{bianJi}}</div>
+			<h4><strong>个人资料</strong> </h4>
 		</div>
-		<div class="col-sm-12" style="margin-bottom: 10px;margin-top:10px;" id="message">
+		<div class="col-sm-12" style="margin-bottom: 10px; margin-top: 10px;display: none;"
+			id="message">
 			<div class="col-sm-6">
-				<div class="col-sm-1"></div>
-				<div class="col-sm-4 personalMesssage"  >
+				<div class="col-sm-4 personalMesssage">
 					<div>真实姓名：</div>
 					<div>个人电话：</div>
-					<div>个人邮箱：</div>
-					<div>公司名称：</div>
-					<div>公司传真：</div>
-					<div>公司邮箱：</div>
-					<div>公司电话：</div>
-				</div>
-				<div class="col-sm-6 personalMesssage">
-					<div><input type="text" ng-model="name" readonly="readonly"  /></div>
-					<div><input type="text" ng-model="phone"  readonly="readonly" /></div>
-					<div><input type="text" ng-model="email"  readonly="readonly" /></div>
-					<div><input type="text" ng-model="companyName"  readonly="readonly" /></div>
-					<div><input type="text" ng-model="companyFox"  readonly="readonly" /></div>
-					<div><input type="text" ng-model="companyEmail"  readonly="readonly" /></div>
-					<div><input type="text" ng-model="companyPhone"  readonly="readonly" /></div>
-				</div>
-				<div class="col-sm-12" style="text-align: center;margin-top:50px;">
-					<input type="button" value="编辑" ng-click="editor()" style="text-align: center;width: 100px;background-color: #00807F;color:#ffffff;border: 0px;" />
-				</div>
-			</div>
-			<div class="col-sm-6">
-					<div><img alt="" src="images/u1218.png" width="230px;" /> </div>
-			</div>
-		</div>
-		<div class="col-sm-12" style="margin-bottom: 10px;margin-top:10px;display: none" id="editor">
-			<div class="col-sm-6">
-				<div class="col-sm-1"></div>
-				<div class="col-sm-4 personalMesssage"  >
 					<div>登录密码：</div>
-					<div>重复密码：</div>
-					<div>真实姓名：</div>
-					<div>个人电话：</div>
-					<div>个人邮箱：</div>
+					<div>邮箱：</div>
 					<div>公司名称：</div>
+					<div>公司电话：</div>
 					<div>公司传真：</div>
-					<div>公司邮箱：</div>
 				</div>
-				<div class="col-sm-6 personalMesssage">
-					<div><input type="text" ng-model="password"   /></div>
-					<div><input type="text" ng-model="rePassword"   /></div>
-					<div><input type="text" ng-model="name"   /></div>
-					<div><input type="text" ng-model="phone"  /></div>
-					<div><input type="text" ng-model="email"  /></div>
-					<div><input type="text" ng-model="companyName" /></div>
-					<div><input type="text" ng-model="companyFox" /></div>
-					<div><input type="text" ng-model="companyEmail" /></div>
-					<div><input type="text" ng-model="companyPhone" /></div>
+				<div class="col-sm-8 personalMesssage">
+					<div>
+						<input type="text" ng-model="name" readonly="readonly" placeholder="请输入客户姓名" />
+					</div>
+					<div>
+						<input type="text" ng-model="phone" readonly="readonly"  />
+						
+					</div>
+					<div>
+						<input type="text" value="********" readonly="readonly" />
+					</div>
+					<div>
+						<input type="text" ng-model="companyEmail" readonly="readonly"  placeholder="请输入个人邮箱"/>
+					</div>
+					<div>
+						<input type="text" ng-model="companyName" readonly="readonly" placeholder="请输入公司名称"/>
+					</div>
+					<div>
+						<input type="text" ng-model="companyPhone" readonly="readonly" placeholder="请输入公司电话" />
+					</div>
+					<div>
+						<input type="text" ng-model="companyFox" readonly="readonly" placeholder="请输入公司传真" />
+					</div>
 				</div>
-				<div class="col-sm-12" style="text-align: center;margin-top:50px;">
-					<input type="button" value="保存" ng-click="updateUser()" style="text-align: center;width: 80px;background-color: #00807F;color:#ffffff;border: 0px;" />
-					<input type="button" value="取消" ng-click="cancelEditor()" style="text-align: center;width: 80px;background-color: #00807F;color:#ffffff;border: 0px;" />
+				<div class="col-sm-12" style="text-align: center; margin-top: 50px;">
+					<input type="button" value="编辑" ng-click="editor()"
+						style="text-align: center; width: 100px; background-color: #00807F; color: #ffffff; border: 0px;" />
 				</div>
 			</div>
 			<div class="col-sm-6">
-					<div ><img alt="" src="images/u1202.png" width="60px;" /> </div>
-					<div><a>上传头像</a></div>
-					<br/>
-					<div><img alt="" src="images/u1218.png" width="230px;" /> </div>
+				<div ng-hide="imageUrl==''"
+					style="width: 230px; border-top: 1px solid #bdbdbd; padding-top: 10px;">
+					<img alt="" ng-src="{{imageUrl}}" width="230px;" />
+				</div>
+				<div ng-hide="imageUrl!=''"
+					style="width: 230px; border-top: 1px solid #bdbdbd; padding-top: 10px;">无头像！</div>
+			</div>
+		</div>
+		<div class="col-sm-12"
+			style="margin-bottom: 10px; margin-top: 10px;"
+			id="editor">
+			<div class="col-sm-12">
+				<div class="col-sm-4 personalMesssage">
+					<div>真实姓名：</div>
+					<div>个人手机号：</div>
+					<div>密码：</div>
+					<div>邮箱：</div>
+					<div class="isXSCompany" style="display: none;">邮箱密码：</div>
+					<div>公司名称：</div>
+					<div>公司电话：</div>
+					<div>公司传真：</div>
+				</div>
+				<div class="col-sm-6 personalMesssageright">
+					<div>
+						<input type="text" ng-model="newName" placeholder="请输入姓名"/>
+					</div>
+					<div>
+						<input type="text" ng-model="phone" readonly="readonly" placeholder="请输入个人电话" />
+						<button type="button" style="height: 25px; line-height: 20px;"
+							ng-click="updatePhoneModel()">修改</button>
+					</div>
+					<div>
+						<input type="text" value="********" readonly="readonly" />
+						<button type="button" style="height: 25px; line-height: 20px;"
+							ng-click="updatePawdModel()">修改</button>
+					</div>
+					<div>
+						<input type="text" ng-model="newCompanyEmail" placeholder="请输入报价单接收的邮箱" />
+					</div>
+					<div  class="isXSCompany" style="display: none;" >
+						<input type="password" ng-model="emailPassword" id="emailPassword"  placeholder="请输入邮箱密码" />
+<!-- 						<button type="button" style="height: 25px; line-height: 20px;" -->
+<!-- 							ng-click="updatePawdModel()">修改</button> -->
+						<input type="button" name="" style="width: 45px;border: 0px;" value="隐藏" id="showOrhide" ng-click="showEmailPassword()" />
+					</div>
+					<div>
+						<input type="text" ng-model="newCompanyName"  placeholder="请输入公司名称" ng-blur="findCompanyByName()"/>
+					</div>
+					<div>
+						<input type="text" ng-model="newCompanyPhone" placeholder="请输入公司电话" />
+					</div>
+					<div>
+						<input type="text" ng-model="newCompanyFox"  placeholder="请输入公司传真"/>
+					</div>
+				</div>
+				<div class="col-sm-12" style="text-align: center; margin-top: 30px;">
+					<input type="button" value="保存" ng-click="updateUserInfo()"
+						style="text-align: center; width:30%;height:35px;border-radius:5px; background-color: #00807F; color: #ffffff; border: 0px;" />
+<!-- 					<input type="button" value="取消" ng-click="cancelEditor()" -->
+<!-- 						style="text-align: center; width: 80px; background-color: #00807F; color: #ffffff; border: 0px;" /> -->
+				</div>
+			</div>
+			<div class="col-sm-6" style="display: none">
+				<div>
+					<img alt="" src="{{thumb}}" width="60px;" />
+				</div>
+				<div>
+				    头像：<input type="file"  id="one-input" accept="image/*" onchange="angular.element(this).scope().img_upload(this.files)" />
+				</div>
+				<br />
+				<div>
+					<img alt="" src="{{thumb}}" width="230px;" />
+				</div>
 			</div>
 		</div>
 	</div>
 	<div class="col-sm-2"></div>
 </div>
-<div id="top_alert" style="display: none;">
-		<span></span>
+<div   id="bottom" style="padding-top:10px;background-color: #F2F2F2;color:#60605E;">
+	<div class="col-sm-12">
+			<div  class="col-sm-2"></div>
+			<div  class="col-sm-10"><h4><strong>商务信息</strong> </h4></div>
+	</div>
+	<div class="col-sm-2"></div>
+	<div class="col-sm-5">
+		<div class="col-sm-5" style="text-align: right;height: 23px;">商务助理：</div><div class="col-sm-7" style="height: 23px;">{{assistant}}</div>
+		<div class="col-sm-5"  style="text-align: right;height: 23px;">手机号：</div><div class="col-sm-7"style="height: 23px;">{{assistantPhone}}</div>
+		<div class="col-sm-5"  style="text-align: right;height: 23px;">电话：</div><div class="col-sm-7"style="height: 23px;">{{assistantMible}}</div>
+		<div class="col-sm-5"  style="text-align: right;height: 23px;">邮箱：</div><div class="col-sm-7"style="height: 23px;">{{assistantEmail}}</div>
+	</div>
+	<div class="col-sm-5" style="display: none" id="managers" >
+		<div class="col-sm-3" style="text-align: right;height: 23px;">商务经理：</div><div class="col-sm-7"style="height: 23px;">{{manager}}</div>
+		<div class="col-sm-3"  style="text-align: right;height: 23px;">手机号：</div><div class="col-sm-7"style="height: 23px;">{{managerPhone}}</div>
+		<div class="col-sm-3"  style="text-align: right;height: 23px;">电话：</div><div class="col-sm-7"style="height: 23px;">{{managerMible}}</div>
+		<div class="col-sm-3"  style="text-align: right;height: 23px;">邮箱：</div><div class="col-sm-7"style="height: 23px;">{{managerEmail}}</div>
+	</div>
+	<div class="col-sm-2"></div>
 </div>
-<div class="modal fade" id="deleMode" tabindex="-1" role="dialog" style="top:20%;"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-sm">
-			<div class="modal-content">
-				<div class="modal-header" style="background-color: #F2F2F2">
-					<h4 class="modal-title">温馨提示</h4>
+<div id="top_alert" style="display: none;">
+	<span></span>
+</div>
+<div class="modal fade" id="phoneModel" tabindex="-1" role="dialog"
+	style="top: 20%; left: -10%" aria-labelledby="myModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content" style="height: 250px; width: 500px">
+			<div class="modal-header"
+				style="background-color: #F2F2F2; height: 50px;">
+				<div class="col-sm-8">
+					<h4 class="modal-title">修改手机号</h4>
 				</div>
-				<div class="modal-body">
-					<p>确定要删除该报价单吗？</p>
-					<div style="text-align: center;">
-						<button type="button" class="btn btn btn-info btn-sm"
-							id="delButton" value="" ng-click="delOrderDetail()">确定</button>
-						<button type="button" class="btn btn btn-info btn-sm"
-							data-dismiss="modal">取消</button>
+				<div class="col-sm-4" style="text-align: right;">
+					<a href="javascript:void(0)" style="color: #008080; font-weight: bold;"
+						ng-click="closePhoneModel()">X</a>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div id="old_Phone">
+					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+						<label class="col-sm-3"
+							style="text-align: right; line-height: 25px;">手机：</label>
+						<div class="col-sm-8">
+							<span class="block input-icon input-icon-right"> <input
+								id="tel" name="mobile" type="text" ng-model="phone" value=""
+								maxlength="11" minlength="11"  onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" 
+								style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
+								class="form-control text-muted required isMobile"
+								readonly="readonly" placeholder="手机号" /> <i
+								class="ace-icon fa fa-phone"></i>
+							</span>
+						</div>
+					</div>
+					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+						<label class="col-sm-3"
+							style="text-align: right; line-height: 25px;">验证手机：</label>
+						<div class="col-sm-4">
+							<span class="block input-icon input-icon-right"> <input
+								id="reCode" name="randomCode" type="text" ng-model="code"
+								value="" maxlength="6" minlength="6"
+								style="height: 25px; width: 100%; border: 0px; border-bottom: 1px solid; text-align: center"
+								class="form-control required" placeholder="验证码" />
+							</span>
+						</div>
+						<div class="col-sm-4">
+							<button
+								style="text-align: center; background-color: #bdbdbd; border: 0px; border-radius: 2px;"
+								type="button" id="sendCodeOld" ng-click="sendCode()">
+								<i class="ace-icon fa fa-lightbulb-o"></i> <span
+									class="bigger-110">{{countdown}}</span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group col-sm-12"
+						style="margin-top: 30px; text-align: center;">
+						<button
+							style="width: 80%; border: 0px; background-color: #008080; color: white; height: 35px;"
+							ng-click="confirmPhone()" type="button">确认</button>
+					</div>
+				</div>
+				<div id="new_Phone" style="display: none;">
+					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+						<label class="col-sm-3"
+							style="text-align: right; line-height: 25px;">新手机号：</label>
+						<div class="col-sm-8">
+							<span class="block input-icon input-icon-right"> <input
+								id="tel" name="mobile" type="text" ng-model="newPhone" value=""
+								maxlength="11" minlength="11"  onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" 
+								style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
+								class="form-control text-muted required isMobile"
+								placeholder="手机号" /> <i class="ace-icon fa fa-phone"></i>
+							</span>
+						</div>
+					</div>
+					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+						<label class="col-sm-3"
+							style="text-align: right; line-height: 25px;">验证手机</label>
+						<div class="col-sm-4">
+							<span class="block input-icon input-icon-right"> <input
+								id="reCode" name="randomCode" type="text" ng-model="newCode"
+								value="" maxlength="6" minlength="6"
+								style="height: 25px; width: 100%; border: 0px; border-bottom: 1px solid; text-align: center"
+								class="form-control required" placeholder="验证码" />
+							</span>
+						</div>
+						<div class="col-sm-4">
+							<button
+								style="text-align: center; background-color: #bdbdbd; border: 0px; border-radius: 2px;"
+								type="button" id="sendCodeNew" ng-click="newSendCode()">
+								<i class="ace-icon fa fa-lightbulb-o"></i> <span
+									class="bigger-110">{{newcountdown}}</span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group col-sm-12"
+						style="margin-top: 30px; text-align: center;">
+						<button
+							style="width: 80%; border: 0px; background-color: #008080; color: white; height: 35px;"
+							ng-click="updatePhone()" type="button">确认</button>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-<div class="modal " id="quietModel" tabindex="-1" role="dialog" style="top:35px;;background: #ffffff;"
-		aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog modal-sm" style="padding-top:100px;">
-			<div class="modal-content">
-				<div class="modal-header" style="background-color: #F2F2F2">
-					<h4 class="modal-title">温馨提示</h4>
+</div>
+<div class="modal fade" id="pawdModel" tabindex="-1" role="dialog"
+	style="top: 20%; left: -10%" aria-labelledby="myModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content" style="height: 250px; width: 500px">
+			<div class="modal-header"
+				style="background-color: #F2F2F2; height: 50px;">
+				<div class="col-sm-8">
+					<h4 class="modal-title">修改密码</h4>
 				</div>
-				<div class="modal-body">
-					<p>是否退出此页面?</p>
-					<div style="text-align: center;">
-						<button type="button" class="btn btn btn-info btn-sm"
-							id="delButton" value="" ng-click="quietHtml()">确定</button>
-						<button type="button" class="btn btn btn-info btn-sm"
-							data-dismiss="modal">取消</button>
+				<div class="col-sm-4" style="text-align: right;">
+					<a href="javascript:void(0)" style="color: #008080; font-weight: bold;"
+						ng-click="closePawdModel()">X</a>
+				</div>
+			</div>
+			<div class="modal-body">
+				<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+					<label class="col-sm-3"
+						style="text-align: right; line-height: 25px;">原密码：</label>
+					<div class="col-sm-8">
+						<span class="block input-icon input-icon-right"> <input
+							id="tel" name="mobile" type="password" ng-model="password"
+							value="" maxlength="11" minlength="11"
+							style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
+							class="form-control text-muted required isMobile"
+							placeholder="密码" /> <i class="ace-icon fa fa-phone"></i>
+						</span>
 					</div>
+				</div>
+				<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+					<label class="col-sm-3"
+						style="text-align: right; line-height: 25px;">新密码：</label>
+					<div class="col-sm-8">
+						<span class="block input-icon input-icon-right"> <input
+							id="tel" name="mobile" type="password" ng-model="newPassword"
+							value="" maxlength="11" minlength="11"
+							style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
+							class="form-control text-muted required isMobile"
+							placeholder="密码" /> <i class="ace-icon fa fa-phone"></i>
+						</span>
+					</div>
+				</div>
+				<div class="form-group col-sm-12" style="margin-bottom: 5px;">
+					<label class="col-sm-3"
+						style="text-align: right; line-height: 25px;">重复密码：</label>
+					<div class="col-sm-8">
+						<span class="block input-icon input-icon-right"> <input
+							id="tel" name="mobile" type="password" ng-model="newRePassword"
+							value="" maxlength="11" minlength="11"
+							style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
+							class="form-control text-muted required isMobile"
+							placeholder="密码" /> <i class="ace-icon fa fa-phone"></i>
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group col-sm-12"
+				style="margin-top: 30px; text-align: center;">
+				<button
+					style="width: 80%; border: 0px; background-color: #008080; color: white; height: 35px;"
+					ng-click="updatePassword()" type="button">确认</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal " id="quietModel" tabindex="-1" role="dialog"
+	style="top: 35px;; background: #ffffff;" aria-labelledby="myModalLabel"
+	aria-hidden="true">
+	<div class="modal-dialog modal-sm" style="padding-top: 100px;">
+		<div class="modal-content">
+			<div class="modal-header" style="background-color: #F2F2F2">
+				<h4 class="modal-title">温馨提示</h4>
+			</div>
+			<div class="modal-body">
+				<p>是否退出此页面?</p>
+				<div style="text-align: center;">
+					<button type="button" class="btn btn btn-info btn-sm"
+						id="delButton" value="" ng-click="quietHtml()">确定</button>
+					<button type="button" class="btn btn btn-info btn-sm"
+						data-dismiss="modal">取消</button>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
 

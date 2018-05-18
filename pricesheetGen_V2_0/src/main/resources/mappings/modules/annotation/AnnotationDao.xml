@@ -6,6 +6,7 @@
 		a.uid AS "uid",
 		a.quotation_code AS "quotationCode",
 		a.detail_id AS "detailId",
+		a.classfiy_name AS "classfiyName",
 		a.anno_name AS "annoName",
 		a.anno_type AS "annoType",
 		a.anno_price AS "annoPrice",
@@ -54,6 +55,26 @@
 			</otherwise>
 		</choose>
 	</select>
+	
+	<select id="findPageList" resultType="Annotation" >
+		 select 
+		    d.id as orderId,
+			a.quotation_code as quotationCode,
+			a.anno_name as annoName,
+			a.anno_type as annoType,
+			a.create_by AS "createBy.id",
+			b.name as "createBy.name",
+			a.create_date AS "createDate",
+			a.update_by AS "updateBy.id",
+			c.name as "update_by.name",
+			a.update_date AS "updateDate"
+		 from t_product_annotation a
+		 LEFT JOIN sys_user b ON a.create_by = b.id
+		 LEFT JOIN sys_user c ON a.update_by = c.id
+		 LEFT JOIN t_product_order d ON a.quotation_code = d.quotation_code
+		 GROUP BY a.quotation_code
+	</select>
+	
 	<select id="findAllList" resultType="Annotation" >
 		SELECT 
 			<include refid="annotationColumns"/>
@@ -94,6 +115,7 @@
 			is_master,
 			quotation_code,
 			detail_id,
+			classfiy_name,
 			anno_name,
 			anno_type,
 			anno_price,
@@ -107,6 +129,7 @@
 			#{isMaster},
 			#{quotationCode},
 			#{detailId},
+			#{classfiyName},
 			#{annoName},
 			#{annoType},
 			#{annoPrice},

@@ -266,9 +266,8 @@ function addRow(tableId, fieldEngNameList, fieldValList)
 						   		   
 						<c:if test="${preQodIdx ne curQodIdx and preQodIdx ne 0}">			
 								<tr>
-									<td colspan="5"></td>
-									<td>小计</td>
-									<td id="subSumAmt"> <c:out value="${sumAmt}" /></td>
+									<td colspan="7" style="text-align: right;padding-right:20px;">小计</td>
+									<td id="subSumAmt" colspan="2"> <c:out value="${sumAmt}" /></td>
 								</tr>
 						</c:if>
 					
@@ -276,49 +275,54 @@ function addRow(tableId, fieldEngNameList, fieldValList)
 							<c:set value="0.00" var="sumAmt" />
 						    <table width="100%" id="subtab" border="1" style="text-align:center;" cellspacing="0" cellpadding="0">
 								<tr  style="background-color:#008080;color:black;">
-								    <td colspan="7" style="text-align:left;padding-left:16px;" id="subProductType">${quotationOrderDetail.productType}</td>
+								    <td colspan="9" style="text-align:left;padding-left:16px;height:20px;" id="subProductType">${quotationOrderDetail.productType}</td>
 								</tr>
 							    <tr>
 							        <td>序号</td>
 							        <td>产品名称</td>
 							        <td>产品描述</td>
-							        <td>单位</td>
 							        <td>数量</td>
-							        <td>单价(人民币)</td>
-							        <td>金额(人民币)</td>
+							        <td>单价</td>
+							        <td>金额</td>
+							        <td>备注</td>
+							        <td>京东价</td>
+							        <td>链接</td>
 							    </tr>		   
 						</c:if>		    
 								<tr>
 									<td>${quotationOrderDetail.orderNo}</td>
 									<td>${quotationOrderDetail.productName}</td>
 									<td>${quotationOrderDetail.productDesc}</td>
-									<td>${quotationOrderDetail.unin}</td>
 									<td>${quotationOrderDetail.amount}</td>
 									<td>${quotationOrderDetail.unitPrice}</td>
-									<td>${quotationOrderDetail.totalAmt}</td>		
+									<td>${quotationOrderDetail.totalAmt}</td>
+									<td>${quotationOrderDetail.unin}</td>
+									<td>${quotationOrderDetail.jdPrice}</td>
+									<td>${quotationOrderDetail.url}</td>
 								</tr>
 					
 					    <c:set value="${sumAmt + quotationOrderDetail.totalAmt}" var="sumAmt" />
 							<c:if test="${status.last}">			
 								<tr>
-									<td colspan="6" style="text-align: right;padding-right:20px;">小计 </td>
-									<td id="subSumAmt"> <c:out value="${sumAmt}" /></td>
+									<td colspan="7" style="text-align: right;padding-right:20px;">小计 </td>
+									<td id="subSumAmt" colspan="2"  > <c:out value="${sumAmt}" /></td>
 								</tr>
 							</table>
-						</c:if>
+							</c:if>
 						<c:set value="${curQodIdx}" var="preQodIdx" />
 					</c:forEach>
 		    </div>
 		     <div id="tailDivId">
 		    	<div  style="margin-top:20px;width:60%;float: left;font-size: 14px;">
 		    		<div style="text-align: left;font-weight: bold;">备注：</div>
-		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</div>
-		    		<div style="text-align: left;padding-left:20px;">2、报价有效期：5个工作日</div>
+		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</div>
+		    		<div style="text-align: left;padding-left:20px;">2、报价有效期：10个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;" id="arrivalDays">3、到货时间：报价单签字确认回传合同签订后 <input type=text  name="arrivalDays"  style="width:50px;align:center;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;"/>个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;">4、付款期限：</div>
-		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="001">款到发货.  </div>
-		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="002" checked="checked" />货到<input type="text" id="waitDays" name="waitDays" value="7" style="width:50px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" /> 工作日(现金、支票、转账)付款。    </div>
-		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="003"  />其他<input type="text" id="otherChoice" name="otherChoice" style="width:300px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" />。  </div>
+		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="001" <c:if test="${quotationRlt.deliveryMode eq '001'}"> checked="checked"</c:if>>款到发货.  </div>
+		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="002" <c:if test="${quotationRlt.deliveryMode eq '002'}"> checked="checked"</c:if> />货到<input type="text" id="waitDays" name="waitDays" value="<c:if test="${quotationRlt.deliveryMode eq '002'}">${quotationRlt.otherAdd}</c:if>" style="width:50px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" /> 工作日(现金、支票、转账)付款。    </div>
+ 				    <div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="004" <c:if test="${quotationRlt.deliveryMode eq '004'}"> checked="checked"</c:if>>月结.  </div>
+		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="003"  <c:if test="${quotationRlt.deliveryMode eq '003'}"> checked="checked"</c:if> />其他<input type="text" id="otherChoice" name="otherChoice" style="width:300px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" value="<c:if test="${quotationRlt.deliveryMode eq '003'}">${quotationRlt.otherAdd}</c:if>" />。  </div>
 		    	</div>
 		    	  <div style="margin-top:20px;float: right;width:40%">
 		    		<div style="text-align: left;font-weight: bold;font-size: 22px;padding-top:50px;">客户签名(签章):</div>
@@ -330,9 +334,9 @@ function addRow(tableId, fieldEngNameList, fieldValList)
 		    </div>
 		    <div>
 			    <div  style="float: left;width:60%" >
-					<div style="text-align:left">地址:上海市杨浦区黄兴路1号中通大厦1楼北侧铺(眉州支路92-96号)</div>
-					<div style="text-align:left">电话:021-65435161<label style="width:30px;"> </label>传真:65435240</div>
-					<div style="text-align:left">手机	13311763209<label style="width:30px;"> </label> E-mail：shangwu@sh-sapling.com</div>
+					<div style="text-align:left">地址:上海市杨浦区大学路248弄1002室</div>
+					<div style="text-align:left">手机:${user.phone}</div>
+					<div style="text-align:left">E-mail：${user.email}</div>
 					<div><br><br></div>
 					<div style="text-align:left">开户名称：上海小树信息技术有限公司</div>
 					<div style="text-align:left">收款银行：中国银行上海市五角场支行</div>
@@ -340,7 +344,7 @@ function addRow(tableId, fieldEngNameList, fieldValList)
 				</div> 
 				<div style="float: left;width:40%" >
 					<div style="font-weight: bold;font-size: 22px;">Best Regards!</div>
-					<div style="font-weight: bold;font-size: 25px;height:80px;line-height:80px;">${quotationRlt.staffName}</div>
+					<div style="font-weight: bold;font-size: 25px;height:80px;line-height:80px;text-align: center;"><span style="color: #ffffff;">盖</span>${quotationRlt.staffName}</div>
 					<div style="height:3px;"><hr style="height:3px;border:none;border-top:3px double black;" /></div>
 					<div>如有任何疑问请即时与我联系!</div>
 				</div> 

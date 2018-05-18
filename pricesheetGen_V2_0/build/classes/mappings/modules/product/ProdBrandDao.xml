@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.product.dao.ProdBrandDao">
+    
+	<sql id="brandColumns">
+		a.uid as uid,
+		a.brand_id as brandId,
+	  	a.brand_name as brandName,
+	  	a.create_by as "createBy.id",
+	  	c.`name` as "createBy.name",
+		a.create_date as "createDate",
+		a.update_by as "updateBy.id",
+		d.`name` as "updateBy.name",
+  		a.update_date as "updateDate"
+	</sql>
+	
+	<select id="get" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+		WHERE a.uid = #{id}
+	</select>
+	
+	<select id="getBrandByName" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+		WHERE a.brand_name = #{brandName}
+	</select>
+	
+	<select id="findProdBrandByBrandId" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+		<where>
+		    a.brand_id=#{brandId} 
+		</where>
+	</select>
+	
+	 
+	<select id="findListByProduct" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+		<where>
+		    b.product_id=#{productId} 
+		</where>
+	</select>
+	
+	<select id="findProdBrandByClassfiyId" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+			LEFT JOIN t_prodclassfiy_brand e on a.brand_id=e.brand_id
+		<where>
+		   e.classfiy_id= #{classfiyId} 
+		</where>
+	</select>
+	
+	<select id="findPageList" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN t_prod_brand b on a.brand_id=b.brand_id
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id	
+		<where>
+		     <if test="brandName !=null and brandName !='' ">
+				a.brand_name LIKE CONCAT('%',#{brandName},'%' ) 
+			</if>
+		</where>
+		 ORDER BY a.update_date
+	</select>
+	
+	<select id="findAllList" resultType="ProdBrand" >
+		SELECT 
+		DISTINCT
+			<include refid="brandColumns"/>
+			from t_product_brand a
+			LEFT JOIN sys_user c on a.create_by=c.id
+			LEFT JOIN sys_user d on a.update_by =d.id
+	</select>
+	 
+	 	<select id="findMaxProdBrandId" resultType="string">
+		 select max(substring(brand_id, 5, 14)) maxBrandId   
+ 		from t_product_brand 
+	</select>
+	 
+	 
+	<insert id="insert">	
+		INSERT INTO t_product_brand(
+			brand_id,
+			brand_name,	
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES (
+			#{brandId},
+			#{brandName},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)		
+	</insert>
+	
+	<update id="update">
+	 UPDATE t_product_brand SET 
+			brand_name = #{brandName}, 
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+			WHERE brand_id = #{brandId}
+	</update>
+	
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_brand
+		WHERE uid = #{uid}
+	</update>
+	
+	<update id="deleteProdBrand">
+		DELETE FROM t_prod_brand
+		WHERE brand_id = #{brandId}
+	</update>
+	
+</mapper>

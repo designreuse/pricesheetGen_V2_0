@@ -30,4 +30,11 @@ public interface AnnotationDao extends CrudDao<Annotation> {
 	 * @return
 	 */
 	int deleteByQuotationCode(String quotationCode);
+
+	/**
+	 * 分页查询商品注释
+	 * @param anno
+	 * @return
+	 */
+	public List<Annotation> findPageList(Annotation anno);
 }

@@ -159,6 +159,40 @@ public class SystemService extends BaseService implements InitializingBean {
 	}
 	
 	@Transactional(readOnly = false)
+	public void saveFrontUser(User user) {
+		if (StringUtils.isBlank(user.getId())){
+			user.frontInsert(user);
+			userDao.insert(user);
+		}else{
+			// 清除原用户机构用户缓存
+			User oldUser = userDao.get(user.getId());
+			if (oldUser.getOffice() != null && oldUser.getOffice().getId() != null){
+				CacheUtils.remove(UserUtils.USER_CACHE, UserUtils.USER_CACHE_LIST_BY_OFFICE_ID_ + oldUser.getOffice().getId());
+			}
+			// 更新用户数据
+//			user.preUpdate();
+			user.setUpdateBy(user);
+			user.setCreateBy(user);
+			userDao.updateFrontUser(user);
+		}
+		if (StringUtils.isNotBlank(user.getId())){
+			// 更新用户与角色关联
+//			userDao.deleteUserRole(user);
+//			if (user.getRoleList() != null && user.getRoleList().size() > 0){
+//				userDao.insertUserRole(user);
+//			}else{
+//				throw new ServiceException(user.getLoginName() + "没有设置角色！");
+//			}
+			// 将当前用户同步到Activiti
+			saveActivitiUser(user);
+			// 清除用户缓存
+			UserUtils.clearCache(user);
+//			// 清除权限缓存
+//			systemRealm.clearAllCachedAuthorizationInfo();
+		}
+	}
+	
+	@Transactional(readOnly = false)
 	public void saveUserInf4Customer(User user) {
 		if (StringUtils.isBlank(user.getId())){
 			user.preInsert();
@@ -560,6 +594,27 @@ public class SystemService extends BaseService implements InitializingBean {
 		}
 	}
 	
+	@Transactional(readOnly = false)
+	public void saveUserCustomer(User user) {
+		if (StringUtils.isBlank(user.getId())){
+			user.preInsert();
+			userDao.insert(user);
+		}else{
+			// 清除原用户机构用户缓存
+			User oldUser = userDao.get(user.getId());
+			if (oldUser.getOffice() != null && oldUser.getOffice().getId() != null){
+				CacheUtils.remove(UserUtils.USER_CACHE, UserUtils.USER_CACHE_LIST_BY_OFFICE_ID_ + oldUser.getOffice().getId());
+			}
+			// 更新用户数据
+			user.preUpdate();
+			userDao.update(user);
+		}
+		if (StringUtils.isNotBlank(user.getId())){
+			// 更新用户与角色关联
+			userDao.deleteUserRole(user);
+//			// 清除权限缓存
+//			systemRealm.clearAllCachedAuthorizationInfo();
+		}
+	}
 	///////////////// Synchronized to the Activiti end //////////////////
-	
 }

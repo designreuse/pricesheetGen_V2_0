@@ -67,6 +67,8 @@
     	a.no,
 		a.name,
 		a.email,
+		a.email_username AS "emailUserName",
+		a.email_password AS "emailPassword",
 		a.phone,
 		a.mobile,
 		a.user_type,
@@ -84,6 +86,7 @@
 		a.del_flag,
     	c.name AS "company.name",
    	  	c.email AS "company.email",
+   	  	c.phone AS "company.phone",
    	  	c.fax AS "company.fax",   	  	
     	c.parent_id AS "company.parent.id",
     	c.parent_ids AS "company.parentIds",
@@ -166,7 +169,7 @@
 			</if>
 			JOIN sys_role r ON r.id = ur.role_id and r.role_code = #{role.roleCode}
 		</if>
-		WHERE a.del_flag = #{DEL_FLAG_NORMAL}
+		WHERE a.del_flag = #{DEL_FLAG_NORMAL} AND a.isCustomer=#{isCustomer}
 		<if test="company != null and company.id != null and company.id != ''">
 			AND (c.id = #{company.id} OR c.parent_ids LIKE 
 					 CONCAT('%,', #{company.id}, ',%')) 
@@ -255,6 +258,40 @@
 		ORDER BY c.code, o.code, a.name
 	</select>
 	
+	<select id="findNotSelectCustomers" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		from sys_user a   
+		<include refid="userJoins"/>
+		WHERE  a.id NOT in 
+		(
+			 select b.customer_id from sys_user_user b where b.user_id=#{id}
+		)
+		<if test="company != null  and company.id !=null and company.id != ''">
+			AND a.company_id=#{company.id} 
+		</if>
+		<if test="office != null  and office.id !=null and office.id != ''">
+			AND a.office_id=#{office.id} 
+		</if>
+	</select>
+	<select id="findCustomersByUserId" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		from sys_user a   
+		<include refid="userJoins"/>
+		LEFT JOIN sys_user_user b on a.id=b.customer_id
+		WHERE  b.user_id=#{userId}
+	</select>
+	
+	<select id="findUserByCustomerId" resultType="User">
+		SELECT
+			<include refid="userColumns"/>
+		from sys_user a   
+		<include refid="userJoins"/>
+		LEFT JOIN sys_user_user b on a.id=b.user_id
+		WHERE  b.customer_id=#{customerId}
+	</select>
+	
 	<!-- 查询全部用户数目 -->
 	<select id="findAllCount" resultType="long">
 		SELECT
@@ -274,6 +311,8 @@
 			no, 
 			name, 
 			email, 
+			email_username, 
+			email_password, 
 			phone, 
 			mobile, 
 			user_type, 
@@ -285,6 +324,7 @@
 			login_flag, 
 			photo, 
 			qrcode,
+			isCustomer,
 			del_flag
 		) VALUES (
 			#{id}, 
@@ -295,6 +335,8 @@
 			#{no}, 
 			#{name}, 
 			#{email}, 
+			#{emailUserName}, 
+			#{emailPassword}, 
 			#{phone}, 
 			#{mobile}, 
 			#{userType}, 
@@ -306,6 +348,7 @@
 			#{loginFlag}, 
 			#{photo}, 
 			#{qrCode},
+			#{isCustomer},
 			#{delFlag}
 		)
 	</insert>
@@ -320,6 +363,8 @@
 			no = #{no}, 
 			name = #{name}, 
 			email = #{email}, 
+			email_username= #{emailUserName}, 
+			email_password=#{emailPassword},
 			phone = #{phone}, 
 			mobile = #{mobile}, 
 			user_type = #{userType}, 
@@ -336,6 +381,11 @@
 	<delete id="deleteUserRole">
 		DELETE FROM sys_user_role WHERE user_id = #{id}
 	</delete>
+	
+	<delete id="deleteUserCustomer">
+		DELETE FROM sys_user_user WHERE user_id = #{userId} AND customer_id=#{customerId}
+	</delete>
+	
 	
 	<!-- 插入用户和角色关联表数据 -->
 	<insert id="insertUserRole">
@@ -403,6 +453,16 @@
 			#{id}, 
 			#{userId}, 
 			#{friendId}
+		)
+	</insert>
+	
+	<insert id="insertUserCustomer">
+		INSERT INTO sys_user_user(
+			user_id, 
+			customer_id
+		) VALUES (
+			#{userId}, 
+			#{customerId}
 		)
 	</insert>
 	
@@ -475,6 +535,7 @@
 			login_flag, 
 			photo, 
 			qrcode,
+			isCustomer,
 			del_flag
 		) VALUES (
 			#{id}, 
@@ -496,6 +557,7 @@
 			#{loginFlag}, 
 			#{photo}, 
 			#{qrCode},
+			#{isCustomer},
 			#{delFlag}
 		)
 	</insert>
@@ -525,5 +587,71 @@
 			status = 1 
 		WHERE phone = #{phone} and code=#{code}
 	</update>
+	
+	<!--更改手机号码-->
+	<update id="updateUserPhone" >
+		UPDATE sys_user SET  
+			phone = #{newPhone}  
+		WHERE phone = #{phone}  
+	</update>
+	
+	<!--更改手机号码-->
+	<update id="updateUserPassword" >
+		UPDATE sys_user SET  
+			password = #{newPassword}  
+		WHERE phone = #{phone}  
+	</update>
+	
+	<!-- 修改账户-->
+	<update id="updateFrontUser">
+		UPDATE sys_user SET 
+			<if test='company != null'>
+				company_id = #{company.id}, 
+			</if>
+			<if test='office != null'>
+				office_id = #{office.id}, 
+			</if>
+			name = #{name}, 
+			email = #{email}, 
+			email_username= #{emailUserName}, 
+			email_password=#{emailPassword},
+			phone = #{phone}, 
+			mobile = #{mobile}, 
+			user_type = #{userType}, 
+			update_by = #{updateBy.id}, 
+			update_date = #{updateDate}, 
+			remarks = #{remarks},
+			login_flag = #{loginFlag},
+			<if test="photo != null and photo!=''" >
+				photo = #{photo},
+			</if>
+			<if test="isCustomer != null and isCustomer!=''" >
+				isCustomer = #{isCustomer},
+			</if>
+			qrcode = #{qrCode}
+		WHERE id = #{id}
+	</update>
+	
+	<!-- 根据手机号码查询用户 -->
+	<select id="getByPhone" resultType="User" parameterType="User">
+		SELECT
+			<include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+		FROM sys_user a
+		<include refid="userJoins"/><!-- 
+		LEFT JOIN sys_role_office ro ON ro.role_id = r.id -->
+		WHERE a.phone = #{phone} AND a.del_flag = #{DEL_FLAG_NORMAL}
+	</select>
+	
+	<select id="findUserRuleCodeOrId" resultType="User" >
+		SELECT
+			<include refid="userColumns"/><!-- ,
+			ro.office_id AS "roleList.officeList.id" -->
+		FROM sys_user a
+		<include refid="userJoins"/>
+		LEFT JOIN sys_user_role sur on a.id=sur.user_id
+		LEFT JOIN sys_role sr on sur.role_id =sr.id 
+		where sr.role_code=#{roleCode}; 	
+	</select>
 	
 </mapper>

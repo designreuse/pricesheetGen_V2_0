@@ -16,14 +16,14 @@
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
 		<div class="form-group">
-			<span>归属公司：</span>
-				<sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}" 
-				title="公司" url="/sys/office/treeData?type=1" cssClass=" form-control input-sm" allowClear="true" cssStyle="max-width:130px"/>
+<!-- 			<span>归属公司：</span> -->
+<%-- 				<sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}"  --%>
+<%-- 				title="公司" url="/sys/office/treeData?type=1" cssClass=" form-control input-sm" allowClear="true" cssStyle="max-width:130px"/> --%>
 			<span>登录名：</span>
 				<form:input path="loginName" htmlEscape="false" maxlength="50" class=" form-control input-sm" cssStyle="max-width:130px" />
-			<span>归属部门：</span>
-				<sys:treeselect id="office" name="office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}" cssStyle="max-width:130px"
-				title="部门" url="/sys/office/treeData?type=2" cssClass=" form-control input-sm" allowClear="true" notAllowSelectParent="true"/>
+<!-- 			<span>归属部门：</span> -->
+<%-- 				<sys:treeselect id="office" name="office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}" cssStyle="max-width:130px" --%>
+<%-- 				title="部门" url="/sys/office/treeData?type=2" cssClass=" form-control input-sm" allowClear="true" notAllowSelectParent="true"/> --%>
 			<span>姓&nbsp;&nbsp;&nbsp;名：</span>
 				<form:input path="name" htmlEscape="false" maxlength="50" class=" form-control input-sm"  cssStyle="max-width:130px" />
 		 </div>	
@@ -69,7 +69,6 @@
 				<th width="10%"  class="sort-column name">姓名</th>
 				<th width="10%"  class="sort-column phone">电话</th>
 				<th width="10%"  class="sort-column mobile">手机</th>
-				<th width="10%"  class="sort-column c.name">归属公司</th>
 				<th width="17%"  class="sort-column o.name">归属部门</th>
 				<th width="20%" >操作</th>
 			</tr>
@@ -82,18 +81,22 @@
 				<td>${user.name}</td>
 				<td>${user.phone}</td>
 				<td>${user.mobile}</td>
-				<td>${user.company.name}</td>
 				<td>${user.office.name}</td>
 				<td>
 					<shiro:hasPermission name="sys:user:view">
-						<a href="#" onclick="openDialogView('查看用户', '${ctx}/sys/user/form?id=${user.id}','800px', '680px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
+						<a href="#" onclick="openDialogView('查看用户', '${ctx}/sys/user/form?id=${user.id}','800px', '625px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="sys:user:edit">
-						<a href="#" onclick="openDialog('修改用户', '${ctx}/sys/user/form?id=${user.id}','800px', '700px', 'officeContent')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>
+						<a href="#" onclick="openDialog('修改用户', '${ctx}/sys/user/form?id=${user.id}','800px', '625px', 'officeContent')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>
 					</shiro:hasPermission>
 					<shiro:hasPermission name="sys:user:del">
 						<a href="${ctx}/sys/user/delete?id=${user.id}" onclick="return confirmx('确认要删除该用户吗？', this.href)" class="btn btn-danger btn-xs"><i class="fa fa-trash"></i> 删除</a>
 					</shiro:hasPermission>
+					<c:if test="${user.office.id eq '72d1c18deb694b83ba8ba7a1e01c63c7'}">
+						<shiro:hasPermission name="sys:user:assign"> 
+							<a href="#" onclick="openDialogView('分配客户', '${ctx}/sys/user/assign?id=${user.id}','800px', '600px')"  class="btn  btn-warning btn-xs" ><i class="glyphicon glyphicon-plus"></i> 分配用户</a>
+						</shiro:hasPermission>
+					</c:if>
 				</td>
 			</tr>
 		</c:forEach>

@@ -12,6 +12,8 @@
 		a.unin AS "unin",
 		a.amount AS "amount",
 		a.unit_price AS "unitPrice",
+		a.jd_Price as "jdPrice",
+		a.url as "url",
 		a.total_amt AS "totalAmt",
 		a.create_date AS "createDate",
 		a.create_by AS "createBy.id",
@@ -86,7 +88,9 @@
 			create_by,
 			update_date,
 			update_by,
-			status
+			status,
+			jd_price,
+			url
 		) VALUES (
 			#{quotationCode},
 			#{productType},
@@ -101,7 +105,9 @@
 			#{createBy.id},
 			#{updateDate},
 			#{updateBy.id},
-			#{status}
+			#{status},
+			#{jdPrice},
+			#{url}
 		)
 	</insert>
 	

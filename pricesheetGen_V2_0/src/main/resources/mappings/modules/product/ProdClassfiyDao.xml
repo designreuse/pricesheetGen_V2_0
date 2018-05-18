@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.product.dao.ProdClassfiyDao">
+	
+	<sql id="prodClassfiyColumns">
+		a.uid as uid,
+	  	a.prodClassfiy_id as prodClassfiyId,
+	  	a.prodClassfiy_name as prodClassfiyName,
+	  	a.create_by as "createBy.id",
+	  	c.`name` as "createBy.name",
+		a.update_by as "updateBy.id",
+		d.`name` as "updateBy.name",
+	  	a.create_date as createDate,
+	  	a.update_date as updateDate
+	</sql>
+
+	<select id="get" resultType="ProdClassfiy">
+		SELECT 
+			DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+		WHERE a.uid = #{id}
+	</select>
+	
+	<select id="getClassfiyByName" resultType="ProdClassfiy">
+		SELECT 
+			DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+		WHERE a.prodClassfiy_name = #{classfiyName}
+	</select>
+	
+	<select id="findMaxProdClassfiyId" resultType="string">
+		 select max(substring(prodClassfiy_id, 5, 14)) maxClassfiyId   
+ 		from t_product_classfiy 
+	</select>
+	
+	
+	<select id="findClassfiyByBrandId"  resultType="ProdClassfiy">
+		SELECT 
+		DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+	</select>
+	
+	<select id="findListByProduct"  resultType="ProdClassfiy">
+		SELECT 
+		DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN t_prod_classfiy b on a.prodClassfiy_id=b.classfiy_id
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+		 <where>   
+		 	   b.product_id=#{productId}
+        </where>
+	</select>
+	
+	<select id="findList" resultType="ProdClassfiy" >
+			SELECT 
+			DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+	</select>
+	 
+	<select id="findPageList" resultType="ProdClassfiy" >
+		SELECT 
+			DISTINCT
+			<include refid="prodClassfiyColumns"/>
+		from t_product_classfiy a
+		LEFT JOIN sys_user c on a.create_by =c.id 
+		LEFT JOIN sys_user d on a.update_by =d.id
+		<where>
+		     <if test="prodClassfiyName !=null and prodClassfiyName !='' ">
+				a.prodClassfiy_name LIKE CONCAT('%',#{prodClassfiyName},'%' ) 
+			</if>
+		</where>
+		 ORDER BY a.update_date
+	</select>
+
+	<insert id="insert">	
+		INSERT INTO t_product_classfiy(
+			prodClassfiy_id,
+	  	    prodClassfiy_name,	
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES 
+		(
+			#{prodClassfiyId},
+			#{prodClassfiyName},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)		
+	</insert>
+	
+	<update id="update">
+	 		UPDATE t_product_classfiy SET 
+			prodClassfiy_name = #{prodClassfiyName}, 
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+			WHERE prodClassfiy_id = #{prodClassfiyId}
+	</update>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_classfiy
+		WHERE uid = #{uid}
+	</update>
+	
+	<update id="deleteProdClassfiy">
+		DELETE FROM t_prod_classfiy
+		WHERE classfiy_id = #{prodClassfiyId}
+	</update>
+	
+	
+</mapper>

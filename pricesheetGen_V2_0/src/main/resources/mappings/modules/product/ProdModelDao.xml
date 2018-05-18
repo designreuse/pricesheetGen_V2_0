@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sapling.modules.product.dao.ProdModelDao">
+    
+	<sql id="prodModelColumns">
+		a.uid as uid,
+		a.model_id as modelId,
+	  	a.model_name as modelName,
+	  	a.create_by as "createBy.id",
+	  	d.`name` as "createBy.name",
+		a.update_by as "updateBy.id",
+	  	e.`name` as "updateBy.name",
+	  	a.create_date as createDate,
+	  	a.update_date as updateDate
+	</sql>
+
+	<select id="get" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id
+		WHERE a.uid = #{id}
+	</select>
+	
+	<select id="getModelByName" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id
+		WHERE a.model_name = #{modelName}
+	</select>
+	
+	<select id="findModelByProductId" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_prod_model b on a.model_id=b.model_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id
+		WHERE b.product_id = #{productId}
+	</select>
+	
+	<select id="findAllList" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+	</select>
+	
+	<select id="findListByProduct" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_prod_model b on a.model_id=b.model_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		where b.product_id =#{productId}
+	</select>
+	
+	<select id="findModelByModelId" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_product_brand b on a.brand_id=b.brand_id
+		LEFT JOIN t_prodclassfiy c on a.classfiy_id =c.prodClassfiy_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		LEFT JOIN t_product f on a.product_id =f.product_id
+		WHERE a.model_id = #{modelId}
+	</select>
+	
+	
+	<select id="findProdModelByClassfiyId" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_product_brand b on a.brand_id=b.brand_id
+		LEFT JOIN t_prodclassfiy c on a.classfiy_id =c.prodClassfiy_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		LEFT JOIN t_product f on a.product_id =f.product_id where 1=1   
+		     <if test="brandId !=null and brandId !='' ">
+				 and a.brand_id = #{brandId} 
+			</if>
+			 <if test="classfiyId !=null and classfiyId !='' ">
+				 and a.classfiy_id = #{classfiyId}
+			</if>
+			AND ((a.product_id is null) or (a.product_id =''))
+	</select>
+	
+		<select id="findModelByBrandId" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_product_brand b on a.brand_id=b.brand_id
+		LEFT JOIN t_prodclassfiy c on a.classfiy_id =c.prodClassfiy_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		LEFT JOIN t_product f on a.product_id =f.product_id where 1=1   
+		     <if test="brandId !=null and brandId !='' ">
+				 and a.brand_id = #{brandId} 
+			</if>
+			AND ((a.classfiy_id is null) or (a.classfiy_id =''))
+	</select>
+	
+	
+	<select id="findModelByBIdAndCIdAndPId" resultType="ProdModel">
+		SELECT 
+		    DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN t_product_brand b on a.brand_id=b.brand_id
+		LEFT JOIN t_prodclassfiy c on a.classfiy_id =c.prodClassfiy_id
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		LEFT JOIN t_product f on a.product_id =f.product_id where 1=1   
+		     <if test="brandId !=null and brandId !='' ">
+				 and a.brand_id = #{brandId} 
+			</if>
+			 <if test="classfiyId !=null and classfiyId !='' ">
+				 and a.classfiy_id = #{classfiyId}
+			</if>
+			 <if test="productId  !=null and productId  !='' ">
+				 and a.product_id = #{productId}
+			</if>
+	</select>
+	
+	
+	
+	<select id="findPageList" resultType="ProdModel" >
+		SELECT
+			 DISTINCT
+			<include refid="prodModelColumns"/>
+		from t_product_model a 
+		LEFT JOIN sys_user d on a.create_by =d.id
+		LEFT JOIN sys_user e on a.update_by =e.id	
+		<where>
+		     <if test="modelName !=null and modelName !='' ">
+				a.model_name LIKE CONCAT('%',#{modelName},'%' ) 
+			</if>
+		</where>
+		 ORDER BY a.update_date
+	</select>
+	
+	<select id="findMaxProdModelId" resultType="string">
+		 select max(substring(model_id, 5, 14)) maxModelId   
+ 		from t_product_model
+	</select>
+	
+	<insert id="insert">	
+		INSERT INTO t_product_model(
+			model_id,
+			model_name,	
+			create_date,
+			create_by,
+			update_date,
+			update_by
+		) VALUES (
+			#{modelId},
+			#{modelName},
+			#{createDate},
+			#{createBy.id},
+			#{updateDate},
+			#{updateBy.id}
+		)		
+	</insert>
+	
+	<update id="update">
+	 UPDATE t_product_model SET 
+			model_name = #{modelName}, 
+			update_by = #{updateBy.id},
+			update_date = #{updateDate}
+			WHERE model_id = #{modelId}
+	</update>
+	
+	<update id="updateModel">
+	 	 UPDATE t_product_model
+	 	  <trim prefix="set" suffixOverrides=",">
+			  <if test="modelName !=null and modelName !='' ">model_name=#{modelName},</if>
+			  <if test="product!=null">
+				  <if test="product.productId !=null and product.productId !='' ">
+				  		product_id=#{product.productId},
+				  </if>
+			   </if>
+			  <if test="brand!=null">
+				  <if test="brand.brandId !=null and brand.brandId !=''">
+				  		brand_id=#{brand.brandId},
+				  </if>
+			  </if>
+			  <if test="classfiy!=null">
+				  <if test="classfiy.prodClassfiyId !=null and classfiy.prodClassfiyId !='' ">
+				  		classfiy_id=#{classfiy.prodClassfiyId},
+				  </if>
+			  </if>
+		 </trim>
+		 where model_id =#{modelId}
+	</update>
+	
+	<!--物理删除-->
+	<update id="delete">
+		DELETE FROM t_product_model
+		WHERE uid = #{uid}
+	</update>
+	
+	<update id="deleteProdModel">
+		DELETE FROM t_prod_model
+		WHERE model_id = #{modelId}
+	</update>
+	
+</mapper>

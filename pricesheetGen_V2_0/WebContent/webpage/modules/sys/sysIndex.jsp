@@ -296,29 +296,29 @@ function changeStyle(){
 
 
 <!-- 即时聊天插件  开始-->
-<link href="${ctxStatic}/layer-v2.3/layim/layui/css/layui.css" type="text/css" rel="stylesheet"/>
-<script type="text/javascript">
-var currentId = '${fns:getUser().loginName}';
-var currentName = '${fns:getUser().name}';
-var currentFace ='${fns:getUser().photo}';
-var url="${ctx}";
-var static_url="${ctxStatic}";
-var wsServer = 'ws://'+window.document.domain+':8668'; 
+<%-- <link href="${ctxStatic}/layer-v2.3/layim/layui/css/layui.css" type="text/css" rel="stylesheet"/> --%>
+<!-- <script type="text/javascript"> -->
+<%-- // var currentId = '${fns:getUser().loginName}'; --%>
+<%-- // var currentName = '${fns:getUser().name}'; --%>
+<%-- // var currentFace ='${fns:getUser().photo}'; --%>
+<%-- // var url="${ctx}"; --%>
+<%-- // var static_url="${ctxStatic}"; --%>
+<!-- // var wsServer = 'ws://'+window.document.domain+':8668';  -->
 
 </script>
 <!--webscoket接口  -->
-<script src="${ctxStatic}/layer-v2.3/layim/layui/layui.js"></script>
+<%-- <script src="${ctxStatic}/layer-v2.3/layim/layui/layui.js"></script> --%>
 
-<script src="${ctxStatic}/layer-v2.3/layim/layim.js"></script>
+<%-- <script src="${ctxStatic}/layer-v2.3/layim/layim.js"></script> --%>
 <!-- 即时聊天插件 结束 -->
 <style>
 /*签名样式*/
-.layim-sign-box{
-	width:95%
-}
-.layim-sign-hide{
-  border:none;background-color:#F5F5F5;
-}
-</style>
+/* .layim-sign-box{ */
+/* 	width:95% */
+/* } */
+/* .layim-sign-hide{ */
+/*   border:none;background-color:#F5F5F5; */
+/* } */
+<!-- </style>  
 
 </html>

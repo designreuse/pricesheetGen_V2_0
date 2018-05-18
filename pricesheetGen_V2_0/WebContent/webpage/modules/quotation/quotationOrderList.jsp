@@ -56,31 +56,40 @@
 		<input id="pageNo" name="pageNo" type="hidden" value="${page.pageNo}"/>
 		<input id="pageSize" name="pageSize" type="hidden" value="${page.pageSize}"/>
 		<table:sortColumn id="orderBy" name="orderBy" value="${page.orderBy}" callback="sortOrRefresh();"/><!-- 支持排序 -->
-		<div class="form-group">
-			<span>报价单号：</span>
+		<div class="form-group col-sm-12" style="padding-left:0px;padding-right:0px;">
+			<div class="col-sm-5">
+				<span  class="col-sm-5">报价单号：</span>
 				<form:input path="quotationCode" htmlEscape="false" maxlength="23"  class=" form-control input-sm"/>
-			<span style="padding-left: 50px">最终成交价：</span>
-				<input id="startDlAmt" name="startDlAmt" type="number" maxlength="12" class="laynumber-icon form-control layer-number input-sm"
-					 /> - 
-				<input id="endDlAmt" name="endDlAmt" type="number" maxlength="12" class="laynumber-icon form-control layer-number input-sm"
-					 />
-			<span style="padding-left: 50px;min-width: 100px">客户联系人：</span>
-				<form:input path="custName" htmlEscape="false" maxlength="10"  class=" form-control input-sm"/>		
+			</div>
+			<div class="col-sm-7">
+				<span class="col-sm-3" >最终成交价：</span>
+				<input id="startDlAmt" name="startDlAmt" type="number" maxlength="12" class="laynumber-icon form-control layer-number input-sm"/> - 
+				<input id="endDlAmt" name="endDlAmt" type="number" maxlength="12" class="laynumber-icon form-control layer-number input-sm" />
+			</div>
 		 </div>	
-		<div class="form-group" style="padding-top: 8px">
-			<span>产品名称：</span>
-				<form:input path="productName" htmlEscape="false" maxlength="23"  class=" form-control input-sm"/>
-			<span style="padding-left: 50px">报价日期：</span>
+		<div class="form-group col-sm-12" style="padding-top: 8px;padding-left:0px;padding-right:0px;">
+			<div class="col-sm-5">
+				<span class="col-sm-5">客户联系人：</span>
+				<form:input path="custName" htmlEscape="false" maxlength="10"  class=" form-control input-sm"/>		
+			</div>
+			<div class="col-sm-7">
+				<span class="col-sm-3">报价日期：</span>
 				<input id="beginQuotationDate" name="beginQuotationDate" type="text" maxlength="20" class="laydate-icon form-control layer-date input-sm"
 					value="<fmt:formatDate value="${quotationOrder.beginQuotationDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"/> - 
 				<input id="endQuotationDate" name="endQuotationDate" type="text" maxlength="20" class="laydate-icon form-control layer-date input-sm"
 					value="<fmt:formatDate value="${quotationOrder.endQuotationDate}" pattern="yyyy-MM-dd HH:mm:ss"/>"/>
-			<span style="padding-left: 50px;min-width: 100px">报价关于：</span>
-				<form:input path="quotationAbout" htmlEscape="false" maxlength="23"  class=" form-control input-sm" placeholder="报价关于[可支持模糊查询]" />	
+			</div>
 		 </div>	
-
-
-
+		<div class="form-group col-sm-12" style="padding-top: 8px;padding-left:0px;padding-right:0px;">
+			<div class="col-sm-5">
+				<span class="col-sm-5">产品名称：</span>
+				<form:input path="productName" htmlEscape="false" maxlength="23"  class=" form-control input-sm"/>	
+			</div>
+			<div class="col-sm-7">
+				<span  class="col-sm-3">报价关于：</span>
+				<form:input path="quotationAbout" htmlEscape="false" maxlength="23"  class=" form-control input-sm" placeholder="报价关于[可支持模糊查询]" />	
+			</div>
+		 </div>
 	</form:form>
 	<br/>
 	</div>
@@ -121,14 +130,14 @@
 		<thead>
 			<tr>
 				<th> <input type="checkbox" class="i-checks"></th>
-				<th  class="sort-column quotationCode ">报价单号</th>
-				<th  class="sort-column quotationDate ">报价日期</th>
-				<th  class="sort-column company">客户公司</th>
-				<th  class="sort-column custName      ">客户联系人</th>
-				<th  class="sort-column dealAmt       ">最终成交价</th>
-				<th  class="sort-column staffName     ">销售人员</th>
-				<th  class="sort-column quotationAbout">报价关于</th>
-				<th>操作</th>
+				<th  class="sort-column quotationCode " width="10%">报价单号</th>
+				<th  class="sort-column quotationDate " width="10%">报价日期</th>
+				<th  class="sort-column company" width="10%">客户公司</th>
+				<th  class="sort-column custName      " width="10%">客户联系人</th>
+				<th  class="sort-column dealAmt       " width="10%">最终成交价</th>
+				<th  class="sort-column staffName     " width="10%">销售人员</th>
+				<th  class="sort-column quotationAbout" width="10%">报价关于</th>
+				<th style="text-align: center;" width="20%">操作</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -145,7 +154,7 @@
 					${quotationOrder.quotationCode}
 				</td>
 				<td>
-					<fmt:formatDate value="${quotationOrder.quotationDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
+					<fmt:formatDate value="${quotationOrder.quotationDate}" pattern="yyyy-MM-dd"/>
 				</td>
 				<td>
 					${quotationOrder.company}
@@ -164,14 +173,20 @@
 				</td>
 
 				<td>
+					<shiro:hasPermission name="quotation:quotationOrder:sendEmail">
+						<a href="${ctx}/quotation/quotationOrder/sendEmailByOrderId?id=${quotationOrder.id}" onclick="return confirmx('确认发送邮件吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-mail-forward"></i>发送邮件</a>
+					</shiro:hasPermission>
+					<shiro:hasPermission name="quotation:quotationOrder:sendEmail">
+						<a href="${ctx}/quotation/quotationOrder/sendEmailSignPDFByOrderId?id=${quotationOrder.id}" onclick="return confirmx('确认盖章后发送邮件吗？', this.href)"   class="btn btn-danger btn-xs"><i class="fa fa-mail-forward"></i>盖章发送邮件</a>
+					</shiro:hasPermission>
 					<shiro:hasPermission name="quotation:quotationOrder:show">
 						<a href="#" onclick='top.openTab("${ctx}/quotation/quotationOrder/show?id=${quotationOrder.id}","查看${quotationOrder.quotationCode}", false)' title="报价单明细" class="btn btn-info btn-xs" >
 						<i class="fa fa-search-plus"></i>查看</a>
 					</shiro:hasPermission>
-					<shiro:hasPermission name="quotation:quotationOrder:edit">					
-    					<a href="#" onclick='top.openTab("${ctx}/quotation/quotationOrder/edit?id=${quotationOrder.id}","修改${quotationOrder.quotationCode}", false)' class="btn btn-success btn-xs" title="报价单修改" ><i class="fa fa-edit"></i>
-    					 修改</a>
-    				</shiro:hasPermission>
+<%-- 					<shiro:hasPermission name="quotation:quotationOrder:edit">					 --%>
+<%--     					<a href="#" onclick='top.openTab("${ctx}/quotation/quotationOrder/edit?id=${quotationOrder.id}","修改${quotationOrder.quotationCode}", false)' class="btn btn-success btn-xs" title="报价单修改" ><i class="fa fa-edit"></i> --%>
+<!--     					 修改</a> -->
+<%--     				</shiro:hasPermission> --%>
 					<shiro:hasPermission name="annotation:annotation:annotationAddNav">
 						<a href="#" onclick='top.openTab("${ctx}/annotation/annotation/annotationAddNav?id=${quotationOrder.id}&quotationCode=${quotationOrder.quotationCode}","注释${quotationOrder.quotationCode}", false)' title="添加注释" class="btn btn-info btn-xs" >
 						<i class="fa fa-search-plus"></i>添加注释</a>

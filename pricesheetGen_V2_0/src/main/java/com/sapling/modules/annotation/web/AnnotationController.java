@@ -26,6 +26,7 @@ import com.sapling.common.utils.MyBeanUtils;
 import com.sapling.common.utils.StringUtils;
 import com.sapling.common.web.BaseController;
 import com.sapling.modules.annotation.entity.Annotation;
+import com.sapling.modules.annotation.entity.AnnotationsVo;
 import com.sapling.modules.annotation.service.AnnotationService;
 import com.sapling.modules.quotation.entity.QuotationOrder;
 import com.sapling.modules.quotation.entity.QuotationOrderDetail;
@@ -133,26 +134,33 @@ public class AnnotationController extends BaseController {
 	@RequiresPermissions("annotation:annotation:addList")
 	@RequestMapping(value = {"saveList"}, method = {RequestMethod.POST})	
 	@ResponseBody
-	public AjaxJson saveList(@RequestBody List<Annotation> annotationList, Model model) throws Exception{
+	public AjaxJson saveList(@RequestBody AnnotationsVo annotationsVo, Model model) throws Exception{
 
 		// 商品注释不能为空
 		AjaxJson json = new AjaxJson();
-		if (null == annotationList || 0 == annotationList.size()) {
-			json.put("state", "0");
-			json.put("msg", "请录入商品注释!");
-			return json;
-		} 
+		 
 
 		// 报价单号不能为空
-		if(null == annotationList.get(0).getQuotationCode() 
-				|| "".equals(annotationList.get(0).getQuotationCode().trim())) {
+		if(null == annotationsVo.getQuotationCode() 
+				|| "".equals(annotationsVo.getQuotationCode().trim())) {
 			json.put("state", "0");
 			json.put("msg", "商品注释的报价单号不能为空!");
 			return json;
 		}
-
+		for (Annotation annotation : annotationsVo.getAnnotations()) {
+			if(annotation.getAnnoName()==null || annotation.getAnnoName().equals("")){
+				json.put("state", "0");
+				json.put("msg", "商品品牌不能为空");
+				return json;
+			}
+			if(annotation.getAnnoType()==null || annotation.getAnnoType().equals("")){
+				json.put("state", "0");
+				json.put("msg", "商品型号不能为空");
+				return json;
+			}
+		}
 		// 保存
-		annotationService.saveList(annotationList);;
+		annotationService.saveList(annotationsVo);;
 
 		json.put("state", "1");
 		json.put("msg", "添加注释成功!");

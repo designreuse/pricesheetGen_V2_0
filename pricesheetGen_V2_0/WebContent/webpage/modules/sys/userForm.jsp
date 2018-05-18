@@ -45,7 +45,18 @@
 			$("#inputForm").validate().element($("#loginName"));
 		});
 
-	
+		var pwState=false;
+		function showEmailPassword(){
+			 if (!pwState) {  
+				 	jQuery("#emailPassword").attr("type","text");
+				 	jQuery("#showOrhide").val("隐藏");
+			        pwState = true;  
+			    } else {  
+				 	jQuery("#showOrhide").val("显示");
+				 	jQuery("#emailPassword").attr("type","password");
+			        pwState = false;  
+			    }  
+		}
 	</script>
 </head>
 <body class="hideScroll">
@@ -59,14 +70,24 @@
 		         <td class="width-35"><form:hidden id="nameImage" path="photo" htmlEscape="false" maxlength="255" class="input-xlarge"/>
 						<sys:ckfinder input="nameImage" type="images" uploadPath="/photo" selectMultiple="false" maxWidth="100" maxHeight="100"/></td>
 		         <td  class="width-15"  class="active">	<label class="pull-right"><font color="red">*</font>归属公司:</label></td>
-		         <td class="width-35"><sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}"
-						title="公司" url="/sys/office/treeData?type=1" cssClass="form-control required"/></td>
+		         <td class="width-35">
+		         	<input type="hidden" id="isCustomer" name="isCustomer" value="0" class="form-control" />
+		         	<input type="hidden" id="companyId" name="company.id" value="${user.company.id}" class="form-control" />
+		         	<input type="text"  id="companyName" name="company.name" readonly="readonly" class="form-control" value="${user.company.name}" />
+<%-- 		         	<sys:treeselect id="company" name="company.id" value="${user.company.id}" labelName="company.name" labelValue="${user.company.name}" --%>
+<%-- 						title="公司" url="/sys/office/treeData?type=1" cssClass="form-control"  allowClear="false"  /> --%>
+				</td>
 		      </tr>
 		      
 		      <tr>
 		         <td class="active"><label class="pull-right"><font color="red">*</font>归属部门:</label></td>
-		         <td><sys:treeselect id="office" name="office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}"
-					title="部门" url="/sys/office/treeData?type=2" cssClass="form-control required" notAllowSelectParent="true"/></td>
+		         <td>
+<%-- 		         	<sys:treeselect id="office" name="office.id" value="${user.office.id}" labelName="office.name" labelValue="${user.office.name}" --%>
+<%-- 					title="部门" url="/sys/office/treeData?type=2" cssClass="form-control" notAllowSelectParent="true" extId="1"/> --%>
+					<form:select path="office.id"  class="form-control">
+						<form:options items="${offices}" itemLabel="name" itemValue="id" htmlEscape="false" />
+					</form:select>
+				</td>
 		         <td class="active"><label class="pull-right"><font color="red">*</font>工号:</label></td>
 		         <td><form:input path="no" htmlEscape="false" maxlength="50" class="form-control required"/></td>
 		      </tr>
@@ -74,9 +95,9 @@
 		      <tr>
 		         <td class="active"><label class="pull-right"><font color="red">*</font>姓名:</label></td>
 		         <td><form:input path="name" htmlEscape="false" maxlength="50" class="form-control required"/></td>
-		         <td class="active"><label class="pull-right"><font color="red">*</font>登录名:</label></td>
+		         <td class="active"><label class="pull-right"><font color="red"></font>登录名:</label></td>
 		         <td><input id="oldLoginName" name="oldLoginName" type="hidden" value="${user.loginName}">
-					 <form:input path="loginName" htmlEscape="false" maxlength="50" class="form-control required userName"/></td>
+					 <form:input path="loginName" htmlEscape="false" maxlength="50" class="form-control userName"/></td>
 		      </tr>
 		      
 		      
@@ -91,30 +112,36 @@
 		       <tr>
 		         <td class="active"><label class="pull-right">邮箱:</label></td>
 		         <td><form:input path="email" htmlEscape="false" maxlength="100" class="form-control email"/></td>
-		         <td class="active"><label class="pull-right">电话:</label></td>
-		         <td><form:input path="phone" htmlEscape="false" maxlength="100" class="form-control"/></td>
+		         <td class="active"><label class="pull-right">邮箱密码:</label></td>
+		         <td>
+		         	<input id="emailPassword" name="emailPassword" type="password"  class="form-control" value="${user.emailPassword }" />
+		         	<input type="button" name="" style="width: 45px;border: 0px;" value="隐藏" id="showOrhide" onclick="showEmailPassword()" />
+		         </td>
 		      </tr>
 		      
 		      <tr>
 		         <td class="active"><label class="pull-right">手机:</label></td>
+		         <td><form:input path="phone" htmlEscape="false" maxlength="100" class="form-control"/></td>
+		         <td class="active"><label class="pull-right">电话:</label></td>
 		         <td><form:input path="mobile" htmlEscape="false" maxlength="100" class="form-control"/></td>
+		      </tr>
+		      <tr>
 		         <td class="active"><label class="pull-right">是否允许登录:</label></td>
 		         <td><form:select path="loginFlag"  class="form-control">
 					<form:options items="${fns:getDictList('yes_no')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
 				</form:select></td>
 		      </tr>
-		      
-		      <tr>
-		         <td class="active"><label class="pull-right">用户类型:</label></td>
-		         <td><form:select path="userType"  class="form-control">
-					<form:option value="" label="请选择"/>
-						<form:options items="${fns:getDictList('sys_user_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/>
-					</form:select></td>
-		         <td class="active"><label class="pull-right"><font color="red">*</font>备注:</label></td>
-		         <td>
-			          <form:textarea path="remarks" htmlEscape="false" rows="3" maxlength="200" class="form-control"/> 
-		         </td>
-		      </tr>
+<!-- 		      <tr> -->
+<!-- 		         <td class="active"><label class="pull-right">用户类型:</label></td> -->
+<%-- 		         <td><form:select path="userType"  class="form-control"> --%>
+<%-- 					<form:option value="" label="请选择"/> --%>
+<%-- 						<form:options items="${fns:getDictList('sys_user_type')}" itemLabel="label" itemValue="value" htmlEscape="false"/> --%>
+<%-- 					</form:select></td> --%>
+<!-- 		         <td class="active"><label class="pull-right"><font color="red">*</font>备注:</label></td> -->
+<!-- 		         <td> -->
+<%-- 			          <form:textarea path="remarks" htmlEscape="false" rows="3" maxlength="200" class="form-control"/>  --%>
+<!-- 		         </td> -->
+<!-- 		      </tr> -->
 		       <tr>
 		         <td class="active"><label class="pull-right">用户角色:</label></td>
 		         <td colspan="3">

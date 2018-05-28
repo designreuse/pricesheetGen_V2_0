@@ -35,15 +35,10 @@
 	</div>
 	</div>
 	<script type="text/javascript">
-		var setting = {
-			data:{
-					simpleData:{
-						enable:true,idKey:"id",pIdKey:"pId",rootPId:'0'
-						}
-		    },
-			callback:{ 
-				onClick:function(event, treeId, treeNode){
+		var setting = {data:{simpleData:{enable:true,idKey:"id",pIdKey:"pId",rootPId:'0'}},
+			callback:{onClick:function(event, treeId, treeNode){
 					var id = treeNode.id == '0' ? '' :treeNode.id;
+					 
 					$('#officeContent').attr("src","${ctx}/sys/user/list?"+
 							(treeNode.type !=1 ?("office.id="+id+"&office.name="+treeNode.name):
 							("company.id="+id+"&company.name="+treeNode.name)
@@ -53,8 +48,7 @@
 		};
 		
 		function refreshTree(){
-		
-			$.getJSON("${ctx}/sys/office/officeTreeData?isXSCompany=0",function(data){
+			$.getJSON("${ctx}/sys/office/treeData",function(data){
 				$.fn.zTree.init($("#ztree"), setting, data).expandAll(true);
 			});
 		}

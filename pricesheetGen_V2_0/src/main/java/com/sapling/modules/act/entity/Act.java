@@ -20,7 +20,6 @@ import com.sapling.common.persistence.BaseEntity;
 import com.sapling.common.utils.StringUtils;
 import com.sapling.common.utils.TimeUtils;
 import com.sapling.modules.act.utils.Variable;
-import com.sapling.modules.sys.entity.User;
 
 /**
  * 工作流Entity
@@ -404,13 +403,6 @@ public class Act extends BaseEntity<Act> {
 
 	public void setHisProcIns(HistoricProcessInstance hisProcIns) {
 		this.hisProcIns = hisProcIns;
-	}
-
-
-	@Override
-	public void frontInsert(User user) {
-		// TODO Auto-generated method stub
-		
 	}
 
 }

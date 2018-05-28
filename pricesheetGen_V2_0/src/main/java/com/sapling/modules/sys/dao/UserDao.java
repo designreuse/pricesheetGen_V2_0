@@ -145,48 +145,4 @@ public interface UserDao extends CrudDao<User> {
 	 * @param string
 	 */
 	public void updateSMSCodeByCodePhone(@Param("phone")String phone, @Param("code")String code);
-
-	/**
-	 * 修改手机号码
-	 * @param user
-	 * @return
-	 */
-	public long updateUserPhone(@Param("phone")String phone,@Param("newPhone")String newPhone);
-	/**
-	 * 修改用户密码
-	 * @param user
-	 * @return
-	 */
-	public long updateUserPassword(@Param("phone")String phone,@Param("newPassword")String newPassword);
-	/**
-	 * 修改用户资料
-	 * @param user
-	 * @return
-	 */
-	public int updateFrontUser(User user);
-
-
-	/**
-	 * 根据手机号码查询用户
-	 * @param loginName
-	 * @return
-	 */
-	public User getByPhone(User iuser);
-	
-	/**
-	 * 根据角色获取用户
-	 * @param string
-	 * @return
-	 */
-	public List<User> findUserRuleCodeOrId(@Param("roleCode")String roleCode);
-
-	public List<User> findCustomersByUserId(@Param("userId")String userId);
-
-	public List<User> findNotSelectCustomers(User user);
-
-	public void insertUserCustomer(@Param("userId")String userId, @Param("customerId")String customerId);
-
-	public void deleteUserCustomer(@Param("userId")String userId,@Param("customerId")String customerId);
-
-	public List<User> findUserByCustomerId(@Param("customerId")String id);
 }

@@ -95,10 +95,10 @@
 			<tr>
 				<th> <input type="checkbox" class="i-checks"></th>
 				<th  class="sort-column id">报价单号</th>
-<!-- 				<th  class="sort-column quotationCode">创建注释人</th> -->
-				<th  class="sort-column quotationDate">最后更改注释人</th>
-<!-- 				<th  class="sort-column quotationDate">创建时间</th> -->
-				<th  class="sort-column updateDate">最后更新时间</th>
+				<th  class="sort-column quotationCode">规格</th>
+				<th  class="sort-column quotationDate">型号</th>
+				<th  class="sort-column quotationDate">价格</th>
+				<th  class="sort-column updateDate">更新时间</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -106,29 +106,25 @@
 		<c:forEach items="${page.list}" var="annotation">
 			<tr>
 				<td> <input type="checkbox" id="${annotation.uid}" class="i-checks"></td>
-				<td><a  href="#" onclick="top.openTab('${ctx}/annotation/annotation/annotationAddNav?id=${annotation.orderId}&quotationCode=${annotation.quotationCode}','注释${annotation.quotationCode}', false)">
+				<td><a  href="#" onclick="openDialogView('查看注释', '${ctx}/annotation/annotation/form?id=${annotation.uid}','800px', '500px')">
 					<%-- ${quotationOrder.id} --%>
 					${annotation.quotationCode}
 				</a></td>
-<!-- 				<td> -->
-<%-- 					${annotation.createBy.name} --%>
-<!-- 				</td> -->
 				<td>
-					${annotation.updateBy.name}
+					${annotation.annoName}
 				</td>
-<!-- 				<td> -->
-<%-- 					<fmt:formatDate value="${annotation.createDate}" pattern="yyyy-MM-dd HH:mm:ss"/> --%>
-<!-- 				</td> -->
+				<td>
+					${annotation.annoType}
+				</td>
+				<td>
+					${annotation.annoPrice}
+				</td>
 				<td>
 					<fmt:formatDate value="${annotation.updateDate}" pattern="yyyy-MM-dd HH:mm:ss"/>
 				</td>
 				<td>
-<%-- 					 <shiro:hasPermission name="annotation:annotation:view"> --%>
-<%-- 						<a href="#" onclick="openDialogView('查看注释', '${ctx}/annotation/annotation/form?id=${annotation.uid}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a> --%>
-<%-- 					</shiro:hasPermission> --%>
-					<shiro:hasPermission name="annotation:annotation:annotationAddNav">
-						<a href="#" onclick='top.openTab("${ctx}/annotation/annotation/annotationAddNav?id=${annotation.orderId}&quotationCode=${annotation.quotationCode}","注释${annotation.quotationCode}", false)' title="查看" class="btn btn-info btn-xs" >
-						<i class="fa fa-search-plus"></i>查看</a>
+					 <shiro:hasPermission name="annotation:annotation:view">
+						<a href="#" onclick="openDialogView('查看注释', '${ctx}/annotation/annotation/form?id=${annotation.uid}','800px', '500px')" class="btn btn-info btn-xs" ><i class="fa fa-search-plus"></i> 查看</a>
 					</shiro:hasPermission>
 					<%-- <shiro:hasPermission name="annotation:annotation:edit">
     					<a href="#" onclick="openDialog('修改注释', '${ctx}/annotation/annotation/form?id=${quotationOrder.id}','800px', '500px')" class="btn btn-success btn-xs" ><i class="fa fa-edit"></i> 修改</a>

@@ -137,8 +137,8 @@ $(function(){
 		        <div style="width: 100%;">
 		        	<div  style="height:25px;line-height:25px; background-color:#008080;text-align: left;width:43.5%;font-weight: bold;margin-bottom:3px;z-index:2;position: absolute !important;top:0px;left: 15px;">
 		        			尊敬的客户，您好！兹对贵司需求报价如下：
-		        			<a  class="loginInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;"> 登录</a>
-<!-- 		               		<a   class="signupInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;" >注册</a> -->
+		        			<a  class="loginInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;"> 登录/ </a>
+		               		<a   class="signupInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;" >注册</a>
 		            </div>
 		         </div>
 		         <div  style="width:50%;" >
@@ -538,7 +538,7 @@ $(function(){
 		    <div>
 		    	<div class="col-sm-7" style="margin-top:20px;">
 		    		<div style="text-align: left;font-weight: bold;">备注：</div>
-		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</div>
+		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</div>
 		    		<div style="text-align: left;padding-left:20px;">2、报价有效期：5个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;" id="arrivalDays">3、到货时间：报价单签字确认回传合同签订后 <input type=text  name="arrivalDays" value="5" readonly="readonly" style="width:50px;align:center;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" />个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;">4、付款期限：</div>

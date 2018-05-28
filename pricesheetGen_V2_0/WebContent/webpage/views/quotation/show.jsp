@@ -314,7 +314,7 @@
 				 </tr>
 				 <tr height="20" style="mso-height-source:userset;height:15.0pt">
 				  <td height="20" class="xl160" width="32" style="height:15.0pt;width:24pt">1、</td>
-				  <td colspan="9" class="xl212" width="509" style="width:384pt">以上报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</td>
+				  <td colspan="9" class="xl212" width="509" style="width:384pt">以上报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</td>
 				  <td class="xl90"></td>
 				  
 				 </tr>

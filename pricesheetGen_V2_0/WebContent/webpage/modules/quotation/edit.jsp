@@ -610,7 +610,7 @@ function deleteRow(tableId, obj, index, deleteSubTbl)
     <div id="tailDivId">
         <table width="80%" id="tailTab" border="1px" style="text-align:center;">
             <tr class="tr-left"><td width="5%">备注</td><td></td></tr>
-            <tr class="tr-left"><td ></td><td>1.报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</td></tr>
+            <tr class="tr-left"><td ></td><td>1.报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</td></tr>
             <tr class="tr-left"><td></td><td>2.报价有效期5个工作日</td></tr>
             <tr class="tr-left"><td></td><td><div id="arrivalDays">3.到货时间：报价单签字确认回传合同签订后
                 <input type=text  name="arrivalDays" value="${data.arrivalDays}" style="width:50px;align:center"/>个工作日</div></td></tr>

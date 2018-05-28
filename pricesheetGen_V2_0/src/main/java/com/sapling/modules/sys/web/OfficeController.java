@@ -179,23 +179,4 @@ public class OfficeController extends BaseController {
 		}
 		return mapList;
 	}
-	
-	@RequiresPermissions("user")
-	@ResponseBody
-	@RequestMapping(value = "officeTreeData")
-	public List<Map<String, Object>> officeTreeData(String isXSCompany, HttpServletResponse response) {
-		List<Map<String, Object>> mapList = Lists.newArrayList();
-		List<Office> list = officeService.findAllListByCompany(isXSCompany);
-		for (int i=0; i<list.size(); i++){
-			Office e = list.get(i);
-				Map<String, Object> map = Maps.newHashMap();
-				map.put("id", e.getId());
-				map.put("pId", e.getParentId());
-				map.put("pIds", e.getParentIds());
-				map.put("name", e.getName());
-				map.put("type", e.getType());
-				mapList.add(map);
-		}
-		return mapList;
-	}
 }

@@ -29,8 +29,6 @@ import com.sapling.modules.quotation.dao.QuotationOrderDao;
 import com.sapling.modules.quotation.dao.QuotationOrderDetailDao;
 import com.sapling.modules.quotation.entity.QuotationOrder;
 import com.sapling.modules.quotation.entity.QuotationOrderDetail;
-import com.sapling.modules.quotation.utils.HtmlToPdf;
-import com.sapling.modules.sys.dao.UserDao;
 import com.sapling.modules.sys.entity.Office;
 import com.sapling.modules.sys.entity.User;
 import com.sapling.modules.sys.utils.UserUtils;
@@ -49,9 +47,6 @@ public class QuotationOrderService extends CrudService<QuotationOrderDao, Quotat
 	 */
 	@Autowired
 	private QuotationOrderDetailDao orderDetailDao;
-	
-	@Autowired
-	private UserDao userDao;
 	
 	private UserUtils userUtils;
 
@@ -167,99 +162,6 @@ public class QuotationOrderService extends CrudService<QuotationOrderDao, Quotat
 		return jo;
 	}
 	
-	/**
-	 * 保存报价单
-	 * @param order
-	 * @param jo
-	 * @return
-	 */
-	@Transactional(readOnly = false)
-	public AjaxJson frontSave(QuotationOrder order,AjaxJson jo) {
-		if(jo==null){
-			jo = new AjaxJson();
-		}
-		if(order==null|| StringUtils.isBlank(order.getStaffId())){
-			jo.put("state", "0");
-			jo.put("msg", "销售人员不存在!");
-			return jo;
-		}
-		User staff = UserUtils.get(order.getStaffId());
-		if(staff==null || StringUtils.isBlank(staff.getNo())){
-			//告诉前台  销售人员不存在
-			jo.put("state", "0");
-			jo.put("msg", "销售人员不存在!");
-			return jo;
-		}
-		order.setStaffName(staff.getName());
-//		User user = UserUtils.getUser();
-		User iuser = new User();
-		iuser.setPhone(order.getCustId());
-		User user = userDao.getByPhone(iuser);
-		order.setCustId(user.getId());
-		
-		//公司简称
-		String companyJc ="GSJC";//user.getCompanyJc();
-		
-//		if(user.getRoleList()!=null && user.getRoleList().size()==1
-//				&& Constant.USER_ROLE_CLIENT.equals(user.getRoleList().get(0).getRoleCode())){
-			//05 代表的是客户
-			Office co = user.getCompany();
-			order.setCompany(co.getName());
-			order.setCompanyFax(co.getFax());
-			order.setCustName(user.getName());
-			order.setCompanyPhone(co.getPhone());
-			order.setCompanyMail(co.getEmail());
-//		}else{
-			//获取公司前四个字首字母
-			companyJc = Pinyin4jUtil.rtnCo4length(order.getCompany());
-//		}
-			
-		
-		List<QuotationOrderDetail> _dtlis = order.getQuotationOrderDetails();
-		if(_dtlis==null || _dtlis.isEmpty()){
-			//告诉前台  销售人员不存在
-			jo.put("state", "0");
-			jo.put("msg", "请完善产品明细信息!");
-			return jo;
-		}
-		String _quotationCode = order.getQuotationCode();
-		String _id = null;
-		//有编号 即是修改数据
-//		if(StringUtils.isNotBlank(_quotationCode) && _quotationCode.length()==23){
-//			order.setUpdateBy(user);
-//			int _count = dao.updateByQuotCodeWithId(order);
-//			if(_count==0){
-				//更新的最基本条件一定是系统用户
-//				jo.put("state", "0");
-//				jo.put("msg", "获取当前更新人异常!");
-//				return jo;
-//			}
-			//删除明细
-//			orderDetailDao.deleteByQuotCode(_quotationCode);
-//		}else{
-			//新增数据
-			_id = UUID.randomUUID().toString().replace("-", "");
-			_quotationCode = quotationCode(companyJc,staff);
-			order.setQuotationDate(new Date());
-			order.setQuotationCode(_quotationCode);
-			order.setCreateBy(user);
-			order.setId(_id);
-			dao.insert(order);
-//		}
-		for (QuotationOrderDetail _dt : _dtlis) {
-			_dt.setQuotationCode(_quotationCode);
-			orderDetailDao.insert(_dt);
-		}
-		jo.put("state", "1");
-		jo.put("msg", _quotationCode+"该报价单保存成功！");
-		jo.put("quotationCode", _quotationCode);
-		jo.put("id", _id);
-		
-		return jo;
-	}
-	
-	
-	
 	@Transactional(readOnly = false)
 	public void delete(QuotationOrder quotationOrder) {
 		super.delete(quotationOrder);
@@ -273,8 +175,7 @@ public class QuotationOrderService extends CrudService<QuotationOrderDao, Quotat
 	 * @return
 	 */
 	private String quotationCode(String companyJc, User staff) {
-		//"BJ" +
-		String _rtn = "01" + companyJc.substring(0, 4) +  DateUtils.getDate("yyyyMMdd").substring(2);
+		String _rtn = "01" + companyJc.substring(0, 4) + "BJ" + DateUtils.getDate("yyyyMMdd").substring(2)+"02" + staff.getNo();
 		int curentCount = dao.selectStaffCurCount(staff.getId());
 		// 0 代表前面补充0
 		// 4 代表长度为4
@@ -323,152 +224,5 @@ public class QuotationOrderService extends CrudService<QuotationOrderDao, Quotat
 				}
 			}
 		}
-	}
-
-	@SuppressWarnings("static-access")
-	public void sendOrderPdf(QuotationOrder order) throws Exception{
-		if(StringUtils.isNotBlank(order.getCustId())){
-			User iuser = new User();
-			iuser.setId(order.getCustId());
-			User user = userDao.get(iuser);
-			String mail =user.getEmail();
-			ExchangeMail exchangeMail=null;
-			
-			
-			User icustor = new User();
-			icustor.setId(order.getStaffId());
-			User custor = userDao.get(icustor);
-			if(mail!=null){
-				if(StringUtils.isNotBlank(order.getTransType())&&order.getTransType().equals("001")){
-					String wkhtmltopdfUrl=Global.getConfig("wkhtmltopdfUrl")+order.getId();
-					String pdfFileUrl=Global.getConfig("pdfUrl")+order.getId()+ ".pdf";
-					HtmlToPdf.convert(wkhtmltopdfUrl,pdfFileUrl);//pdfBuilt(order.getId());
-					String subject="上海小数信息技术有限公司报价单";
-					List<String> to = new ArrayList<String>();
-					to.add(mail);
-					String bodyText="本邮件由上海小数信息技术有限公司商务指定邮件发出；";
-					if(custor.getEmail()!=null && !custor.getEmail().equals("")){
-						exchangeMail=new ExchangeMail(custor.getEmail(),custor.getEmailPassword());
-					}else{
-						exchangeMail=new ExchangeMail();
-					}
-					exchangeMail.doSend(subject,to,null,bodyText,pdfFileUrl);
-				}
-			}
-		}
-	}
-
-	public void createPdf(QuotationOrder order){
-		if(StringUtils.isNotBlank(order.getCustId())){
-			User iuser = new User();
-			iuser.setId(order.getCustId());
-			User user = userDao.get(iuser);
-			String mail =user.getEmail();
-			if(mail!=null){
-				if(StringUtils.isNotBlank(order.getTransType())&&order.getTransType().equals("001")){
-					String wkhtmltopdfUrl=Global.getConfig("wkhtmltopdfUrl")+order.getId();
-					String pdfFileUrl=Global.getConfig("pdfUrl")+order.getId()+ ".pdf";
-					HtmlToPdf.convert(wkhtmltopdfUrl,pdfFileUrl);//pdfBuilt(order.getId());
-//					String subject="上海小数信息技术有限公司报价单";
-//					List<String> to = new ArrayList<String>();
-//					to.add(mail);
-//					String bodyText="本邮件由上海小数信息技术有限公司商务指定邮件发出；";
-//					ExchangeMail.doSend(subject,to,null,bodyText,pdfFileUrl);
-				}
-			}
-		}
-	}
-
-	@SuppressWarnings("static-access")
-	public void sendEmailByOrderId(QuotationOrder quotationOrder) throws Exception {
-		User iuser = new User();
-		iuser.setId(quotationOrder.getCustId());
-		User user = userDao.get(iuser);
-		String mail =user.getEmail();
-		ExchangeMail exchangeMail=null;
-		
-		
-		User icustor = new User();
-		icustor.setId(quotationOrder.getStaffId());
-		User custor = userDao.get(icustor);
-		
-		String pdfFileUrl=Global.getConfig("pdfUrl")+quotationOrder.getId()+ ".pdf";
-		String subject="上海小数信息技术有限公司报价单";
-		List<String> to = new ArrayList<String>();
-		to.add(mail);
-		if(mail!=null){
-			String bodyText="本邮件由上海小数信息技术有限公司商务指定邮件发出；";
-			
-			if(custor.getEmail()!=null && !custor.getEmail().equals("")){
-				exchangeMail=new ExchangeMail(custor.getEmail(),custor.getEmailPassword());
-			}else{
-				exchangeMail=new ExchangeMail();
-			}
-			exchangeMail.doSend(subject,to,null,bodyText,pdfFileUrl);	
-		}
-	}
-
-	
-	@SuppressWarnings("static-access")
-	public void sendEmailToManager(QuotationOrder quotationOrder) throws Exception {
-		
-		String subject="申请审核报价单";
-		
-		ExchangeMail exchangeMail=null;
-		User icustor = new User();
-		icustor.setId(quotationOrder.getStaffId());
-		User custor = userDao.get(icustor);
-		
-		List<String> to = new ArrayList<String>();
-		to.add(custor.getEmail());
-		
-		
-		User iuser = new User();
-		iuser.setId(quotationOrder.getCustId());
-		User user = userDao.get(iuser);
-		
-		String bodyText=user.getCompany().getName()+":‘"+user.getName()+"’提交了一份报价单，请及时审批";
-
-		if(custor.getEmail()!=null && !custor.getEmail().equals("")){
-			exchangeMail=new ExchangeMail(custor.getEmail(),custor.getEmailPassword());
-		}else{
-			exchangeMail=new ExchangeMail();
-		}
-		exchangeMail.doSend(subject,to,null,bodyText,null);
-	}
-
-	@SuppressWarnings("static-access")
-	public void sendEmailSignPDFByOrderId(QuotationOrder order) throws Exception {
-		User iuser = new User();
-		iuser.setId(order.getCustId());
-		User user = userDao.get(iuser);
-		String mail =user.getEmail();
-		ExchangeMail exchangeMail=null;
-		
-		
-		User icustor = new User();
-		icustor.setId(order.getStaffId());
-		User custor = userDao.get(icustor);
-		
-		String pdfFileUrl=Global.getConfig("pdfUrl")+order.getId()+ ".pdf";
-		
-		String pdfSignPDFUrl=Global.getConfig("pdfSignPDFUrl")+order.getId()+ ".pdf";
-		String signImgUrl=Global.getConfig("signImgUrl");
-		HtmlToPdf.signPdf(pdfFileUrl, pdfSignPDFUrl, signImgUrl);
-		
-		String subject="上海小数信息技术有限公司报价单";
-		List<String> to = new ArrayList<String>();
-		to.add(mail);
-		if(mail!=null){
-			String bodyText="本邮件由上海小数信息技术有限公司商务指定邮件发出；";
-			
-			if(custor.getEmail()!=null && !custor.getEmail().equals("")){
-				exchangeMail=new ExchangeMail(custor.getEmail(),custor.getEmailPassword());
-			}else{
-				exchangeMail=new ExchangeMail();
-			}
-			exchangeMail.doSend(subject,to,null,bodyText,pdfSignPDFUrl);	
-		}
-		
 	}
 }

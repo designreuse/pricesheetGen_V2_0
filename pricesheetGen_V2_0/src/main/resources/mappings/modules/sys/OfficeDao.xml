@@ -127,25 +127,6 @@
 		ORDER BY a.code
 	</select>
 	
-	<select id="findAllListByCompany" resultType="Office">
-		SELECT
-			<include refid="officeColumns"/>
-		FROM sys_office a
-		<include refid="officeJoins"/>
-		WHERE a.del_flag =0 AND a.isXSCompany=#{isXSCompany}
-		ORDER BY a.code
-	</select>
-	
-	<select id="findOfficeListByCompanyId" resultType="Office">
-		SELECT
-			<include refid="officeColumns"/>
-		FROM sys_office a
-		<include refid="officeJoins"/>
-		WHERE a.del_flag =0 AND a.parent_id=#{id}
-		ORDER BY a.code
-	</select>
-	
-	
 	<select id="findByParentIdsLike" resultType="Office">
 		SELECT
 			<include refid="officeColumns"/>
@@ -221,8 +202,8 @@
 			address = #{address}, 
 			zip_code = #{zipCode}, 
 			master = #{master}, 
-			phone = #{phone},
-			fax = #{fax},
+			phone = #{phone}, 
+			fax = #{fax}, 
 			email = #{email}, 
 			update_by = #{updateBy.id}, 
 			update_date = #{updateDate}, 

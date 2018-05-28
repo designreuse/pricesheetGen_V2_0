@@ -35,8 +35,6 @@ public class User extends DataEntity<User> {
 	private String no;		// 工号
 	private String name;	// 姓名
 	private String email;	// 邮箱
-	private String emailUserName;	//邮箱账号
-	private String emailPassword;	//邮箱密码
 	private String phone;	// 电话
 	private String mobile;	// 手机
 	private String userType;// 用户类型
@@ -48,8 +46,6 @@ public class User extends DataEntity<User> {
 	private String oldLoginName;// 原登录名
 	private String newPassword;	// 新密码
 	private String sign;//签名
-	private String isCustomer;//是否为客户
-
 	
 	private String oldLoginIp;	// 上次登陆IP
 	private Date oldLoginDate;	// 上次登陆日期
@@ -60,7 +56,7 @@ public class User extends DataEntity<User> {
 
 	public User() {
 		super();
-		this.loginFlag = Global.NO;
+		this.loginFlag = Global.YES;
 	}
 	
 	public User(String id){
@@ -109,6 +105,9 @@ public class User extends DataEntity<User> {
 		this.company = company;
 	}
 	
+	@JsonIgnore
+	@NotNull(message="归属部门不能为空")
+	@ExcelField(title="归属部门", align=2, sort=25)
 	public Office getOffice() {
 		return office;
 	}
@@ -117,6 +116,8 @@ public class User extends DataEntity<User> {
 		this.office = office;
 	}
 
+	@Length(min=1, max=100, message="登录名长度必须介于 1 和 100 之间")
+	@ExcelField(title="登录名", align=2, sort=30)
 	public String getLoginName() {
 		return loginName;
 	}
@@ -166,22 +167,6 @@ public class User extends DataEntity<User> {
 		this.email = email;
 	}
 	
-	public String getEmailUserName() {
-		return emailUserName;
-	}
-
-	public void setEmailUserName(String emailUserName) {
-		this.emailUserName = emailUserName;
-	}
-
-	public String getEmailPassword() {
-		return emailPassword;
-	}
-
-	public void setEmailPassword(String emailPassword) {
-		this.emailPassword = emailPassword;
-	}
-
 	@Length(min=0, max=200, message="电话长度必须介于 1 和 200 之间")
 	@ExcelField(title="电话", align=2, sort=60)
 	public String getPhone() {
@@ -356,13 +341,5 @@ public class User extends DataEntity<User> {
 	 */
 	public String getSign() {
 		return sign;
-	}
-
-	public String getIsCustomer() {
-		return isCustomer;
-	}
-
-	public void setIsCustomer(String isCustomer) {
-		this.isCustomer = isCustomer;
 	}
 }

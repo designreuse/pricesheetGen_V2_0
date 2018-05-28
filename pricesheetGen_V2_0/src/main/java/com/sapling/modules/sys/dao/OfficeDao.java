@@ -3,10 +3,6 @@
  */
 package com.sapling.modules.sys.dao;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-
 import com.sapling.common.persistence.TreeDao;
 import com.sapling.common.persistence.annotation.MyBatisDao;
 import com.sapling.modules.sys.entity.Office;
@@ -22,8 +18,4 @@ public interface OfficeDao extends TreeDao<Office> {
 	Office getByCode(String code);
 	
 	Office getEntity(Office office);
-
-	List<Office> findAllListByCompany(@Param("isXSCompany")String isXSCompany);
-
-	List<Office> findOfficeListByCompanyId(Office company);
 }

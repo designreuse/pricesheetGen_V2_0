@@ -5,7 +5,6 @@ package com.sapling.modules.sys.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +22,6 @@ import com.sapling.modules.sys.utils.UserUtils;
 @Transactional(readOnly = true)
 public class OfficeService extends TreeService<OfficeDao, Office> {
 
-	@Autowired
-	private OfficeDao OfficeDao;
-	
 	public List<Office> findAll(){
 		return UserUtils.getOfficeList();
 	}
@@ -64,14 +60,6 @@ public class OfficeService extends TreeService<OfficeDao, Office> {
 	public void delete(Office office) {
 		super.delete(office);
 		UserUtils.removeCache(UserUtils.CACHE_OFFICE_LIST);
-	}
-	
-	public List<Office> findAllListByCompany(String isXSCompany) {
-		return OfficeDao.findAllListByCompany(isXSCompany);
-	}
-
-	public List<Office> findOfficeListByCompanyId(Office company) {
-		return OfficeDao.findOfficeListByCompanyId(company);
 	}
 	
 }

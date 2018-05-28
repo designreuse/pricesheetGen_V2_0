@@ -58,13 +58,12 @@
 						for(var i=0; i<nodes.length; i++) {//<c:if test="${checked && notAllowSelectParent}">
 							if (nodes[i].isParent){
 								continue; // 如果为复选框选择，则过滤掉父节点
-							}//</c:if>
-							<c:if test="${notAllowSelectRoot}">
+							}//</c:if><c:if test="${notAllowSelectRoot}">
 							if (nodes[i].level == 0){
 								//top.$.jBox.tip("不能选择根节点（"+nodes[i].name+"）请重新选择。");
 								top.layer.msg("不能选择根节点（"+nodes[i].name+"）请重新选择。", {icon: 0});
 								return false;
-							}</c:if>//<c:if test="${notAllowSelectParent}">
+							}//</c:if><c:if test="${notAllowSelectParent}">
 							if (nodes[i].isParent){
 								//top.$.jBox.tip("不能选择父节点（"+nodes[i].name+"）请重新选择。");
 								//layer.msg('有表情地提示');

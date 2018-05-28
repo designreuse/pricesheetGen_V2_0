@@ -28,8 +28,6 @@ public class QuotationOrderDetail extends DataEntity<QuotationOrderDetail> {
 	private BigDecimal amount;		// 数量
 	private BigDecimal unitPrice;	// 单价
 	private BigDecimal totalAmt;	// 总金额
-	private BigDecimal jdPrice;		// 京东价
-	private String url ;           //链接
 	private String status;		    // 状态
 	private List<Annotation> annotation;  // 产品注释
 	
@@ -45,10 +43,6 @@ public class QuotationOrderDetail extends DataEntity<QuotationOrderDetail> {
 	
 	public QuotationOrderDetail() {
 		super();
-	}
-	
-	public QuotationOrderDetail(Long uid) {
-		this.uid = uid;
 	}
 
 	public QuotationOrderDetail(String id){
@@ -127,22 +121,6 @@ public class QuotationOrderDetail extends DataEntity<QuotationOrderDetail> {
 		this.unitPrice = unitPrice;
 	}
 	
-	public BigDecimal getJdPrice() {
-		return jdPrice;
-	}
-
-	public void setJdPrice(BigDecimal jdPrice) {
-		this.jdPrice = jdPrice;
-	}
-
-	public String getUrl() {
-		return url;
-	}
-
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	@ExcelField(title="总金额", align=2, sort=9)
 	public BigDecimal getTotalAmt() {
 		return totalAmt;

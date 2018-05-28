@@ -368,11 +368,7 @@ function NumberToChinese(num){
 	    num = Math.floor(num / 10000);
 	    unitPos++;
 	  }
-	  if(chnStr.length==2 || chnStr.length==3){
-		  if(chnStr.substring(0,1)=="一"){
-			  chnStr=chnStr.substring(1,chnStr.length)
-		  } 
-	  }
+	 
 	  return chnStr;
 }
 
@@ -411,7 +407,7 @@ function addRow(tableId, createSubTbl, fieldChsNameList, fieldEngNameList,
         } else 
         {
         	if(i==1){
-        		  tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" value=\""+NumberToChinese(lastrowIndex)+"、\" name=\"" + curTypeTbl[i-1] + "\" />";
+        		  tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" value=\""+NumberToChinese(lastrowIndex)+"：\" name=\"" + curTypeTbl[i-1] + "\" />";
         	}else{
         		  tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" name=\"" + curTypeTbl[i-1] + "\" readonly=\"readonly\" />";
         	}
@@ -718,8 +714,8 @@ function deleteRow(tableId, obj, index, deleteSubTbl)
 		                     "addRow('tab', true, 
 		                     ['项目名称', '计价币种', '税后总额'],
 		                     ['productType','currency','grpAmount'],
-		                     ['序号','产品名称','产品描述','数量','单价','金额','单位','京东价','链接'],
-		                     ['orderNo','productName','productDesc', 'amount', 'unitPrice', 'totalAmt','unin', 'jdPrice','url'])" style="color:black">添加
+		                     ['序号','产品名称','产品描述','单位','数量','单价(人民币)','金额(人民币)'],
+		                     ['orderNo','productName','productDesc', 'unin', 'amount', 'unitPrice', 'totalAmt'])" style="color:black">添加
 		                 </a></td>
 		                 <td>项目名称</td>
 		                 <td style="text-align:left;width:10%;">计价币种</td>
@@ -729,17 +725,17 @@ function deleteRow(tableId, obj, index, deleteSubTbl)
 		        <div id='area_sumAmount' style="width:100%;" >
 		            <table width="100%"   style="text-align:center;">  
 		                <tr >
-		                    <td style="text-align:right;width:75%;border-left:1px solid black;height:30px;" >项目总价:</td>
+		                    <td style="text-align:right;width:75%;border-left:1px solid black;height:30px;" >项目总价(RMB):</td>
 							<td style="text-align:right;border-right:1px solid black;"> <div id="withTaxAmt" ></div></td>
 		                </tr>  
 						<tr >						
-						   <td style="text-align:right;border-left:1px solid black;">优惠:</td>
+						   <td style="text-align:right;border-left:1px solid black;">优惠(RMB):</td>
 						   <td style="text-align:left;border-right:1px solid black;">
 		                   	 	<input type="text" id="privilegeAmt" name="privilegeAmt" value="0" style="text-align: right;border:0px;width:100%" />
 		                    </td>
 						</tr>   
 						<tr >		                
-							<td style="text-align:right;border:1px solid black;border-top: 0px;border-right: 0px;">最终价格:</td>
+							<td style="text-align:right;border:1px solid black;border-top: 0px;border-right: 0px;">最终价格(RMB):</td>
 		                    <td style="text-align:right;border:1px solid black;border-top: 0px;border-left: 0px;"><div id="dealAmt"></div></td>
 		                </tr>
 		            </table>
@@ -754,13 +750,12 @@ function deleteRow(tableId, obj, index, deleteSubTbl)
 		    <div>
 		    	<div class="col-sm-7" style="margin-top:20px;">
 		    		<div style="text-align: left;font-weight: bold;">备注：</div>
-		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</div>
+		    		<div style="text-align: left;padding-left:20px;">1、报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</div>
 		    		<div style="text-align: left;padding-left:20px;">2、报价有效期：5个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;" id="arrivalDays">3、到货时间：报价单签字确认回传合同签订后 <input type=text  name="arrivalDays" value="5" style="width:50px;align:center;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;"/>个工作日</div>
 		    		<div style="text-align: left;padding-left:20px;">4、付款期限：</div>
 		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="001">款到发货.  </div>
 		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="002" checked="checked" />货到<input type="text" id="waitDays" name="waitDays" value="7" style="width:50px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" /> 工作日(现金、支票、转账)付款。    </div>
-		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="004">月结  </div>
 		    		<div style="text-align: left;padding-left:100px;"><input type="radio" name="deliveryMode" id="radio" value="003"  />其他<input type="text" id="otherChoice" name="otherChoice" style="width:300px;height:20px;line-height: 20px;border: 0px;border-bottom: 1px solid;" />。  </div>
 		    	</div>
 		    	<div class="col-sm-5">
@@ -774,8 +769,8 @@ function deleteRow(tableId, obj, index, deleteSubTbl)
 			<div>
 			    <div class="col-sm-7" >
 					<div style="text-align:left">地址:上海市杨浦区黄兴路1号中通大厦1楼北侧铺(眉州支路92-96号)</div>
-					<div style="text-align:left">手机	:021-65435161</div>
-					<div style="text-align:left">E-mail：gongquan.xie@sh-sapling.com</div>
+					<div style="text-align:left">电话:021-65435161<label style="width:30px;"> </label>传真:65435240</div>
+					<div style="text-align:left">手机	13311763209<label style="width:30px;"> </label> E-mail：gongquan.xie@sh-sapling.com</div>
 					<div><br><br></div>
 					<div style="text-align:left">开户名称：上海小树信息技术有限公司</div>
 					<div style="text-align:left">收款银行：中国银行上海市五角场支行</div>

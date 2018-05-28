@@ -202,7 +202,7 @@ public class HttpURLConnectionUtil {
     }
     
 	public static void main(String[] args) throws Exception {
-		HttpURLConnectionUtil u = new HttpURLConnectionUtil("http://192.168.20.41:8080/pricesheetGen/fileReceive?quotationCode=12345678");
+		HttpURLConnectionUtil u = new HttpURLConnectionUtil("http://192.168.30.20:8080/pricesheetGen/fileReceive?quotationCode=12345678");
 		u.addFileParameter("img", new File(
 				"D:/oopdf111.pdf"));
 		u.addTextParameter("text", "中文");

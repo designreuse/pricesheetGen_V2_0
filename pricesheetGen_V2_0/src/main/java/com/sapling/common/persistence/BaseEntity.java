@@ -115,12 +115,6 @@ public abstract class BaseEntity<T> implements Serializable {
 	public abstract void preInsert();
 	
 	/**
-	 * 前端插入
-	 *
-	 */
-	public abstract void frontInsert(User user);
-	
-	/**
 	 * 更新之前执行方法，子类实现
 	 */
 	public abstract void preUpdate();

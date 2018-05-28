@@ -13,8 +13,6 @@ import com.sapling.common.utils.IPUtils;
 import com.sapling.modules.quotation.entity.QuotationOrder;
 import com.sapling.modules.quotation.service.QuotationOrderDetailService;
 import com.sapling.modules.quotation.service.QuotationOrderService;
-import com.sapling.modules.sys.dao.UserDao;
-import com.sapling.modules.sys.entity.User;
 
 /**
  * 报价单Controller
@@ -31,8 +29,6 @@ public class QuotationOrderUnnomalController {
 	private QuotationOrderService quotationOrderService;
 
 	@Autowired
-	private UserDao userDao;
-	@Autowired
 	private QuotationOrderDetailService quotationOrderDetailService;	
 	
 	/**
@@ -42,17 +38,13 @@ public class QuotationOrderUnnomalController {
 	 */	
 	@RequestMapping(value = {"show"})
 	public String show(HttpServletRequest request,QuotationOrder quotationQry, Model model) {
-//		if(!interceptorsIP(request,quotationQry.getId())){
-//			return "modules/sys/sysLogin";
-//		} 
+		if(!interceptorsIP(request,quotationQry.getId())){
+			return "modules/sys/sysLogin";
+		} 
 		QuotationOrder quotationRlt = quotationOrderService.queryQuotationOrderDtl(quotationQry.getId());
 		quotationOrderDetailService.sortQuotationOrderDetails(quotationRlt);
-		User user = new User();
-		user.setId(quotationRlt.getStaffId());
-		User user1 = userDao.get(user);
 		model.addAttribute("quotationQry", quotationQry);
 		model.addAttribute("quotationRlt",  quotationRlt);
-		model.addAttribute("user",  user1);
 		return "modules/quotation/pdfPrintPage";
 	}
 	

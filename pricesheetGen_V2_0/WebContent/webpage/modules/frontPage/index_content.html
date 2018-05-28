@@ -21,23 +21,6 @@ div {
 	_top: expression(offsetParent.scrollTop +0);
 	height: 35px;
 } 
-.left{
-	position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #ffffff;  opacity:1; -moz-opacity:0.5;border-radius: 10px;  
-}
-.right{
-	position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #ffffff;  opacity:1; -moz-opacity:0.5;border-radius: 10px;  
-}
-.bottom{
-	position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #ffffff;  opacity:1; -moz-opacity:0.5;border-radius: 10px;  
-}
-.selectshake{ border:1px solid #d00; background:red; color:#d00;} 
-.clean{
-	clear:both;
-} 
-.addRightClass{
-	font-weight: bold;
-	font-size: 16px;
-}
 </style>
 
 
@@ -62,7 +45,7 @@ div {
 			strDate = "0" + strDate;
 		}
 
-		return date.getFullYear() + seperator1 + month ;
+		return date.getFullYear() + seperator1 + month + seperator1 + strDate;
 	}
 
 	/*
@@ -150,7 +133,77 @@ div {
 		});
 	}
 
-	
+	// 组织报价单返回Json对象
+	function getPriceSheetJson() {
+
+		// 报价单总信息json实体
+		var quotationOrder = {};
+		var fieldsHead = $("#headTab").find("input:visible");
+
+		// 报价单头部转Json 
+		addObjSet2Json(quotationOrder, fieldsHead, null);
+
+		// 结算货币 
+		var fieldsettlementType = $("select[name='settlementType']").find(
+				"option:selected");
+		quotationOrder.settlementType = $(fieldsettlementType).val();
+		// 付款方式
+		quotationOrder.payType = $("select[name='payType']").find(
+				"option:selected").val();
+		// 销售人员
+		quotationOrder.staffId = $("select[name='staffId']").find(
+				"option:selected").val();
+		// 报价单号上送始终为空
+		quotationOrder.quotationCode = "";
+
+		// 报价单明细信息
+		var objBodyList = null;
+		var fieldsTrObj = $("#mainDivId").find("#tab").find("tr");
+		$.each(fieldsTrObj, function(index, domEle) {
+			var fieldsInput = $(domEle).find("input:visible");
+			if (0 >= fieldsInput.length) {
+				return;
+			}
+
+			var svcGrp = fieldsInput[0];
+			if (null == objBodyList) {
+				objBodyList = new Array();
+			}
+
+			var subfieldsTrObj = $("#subDivId_Div_" + index).find(
+					"#subDivId_Tbl_" + index).find("tr");
+			$.each(subfieldsTrObj, function(subindex, subdomEle) {
+				var objBodySub = {};
+				var subfieldsInput = $(subdomEle).find("input:visible");
+
+				if (0 >= subfieldsInput.length) {
+					return;
+				}
+
+				addObjSet2Json(objBodySub, subfieldsInput, svcGrp);
+				objBodyList.push(objBodySub);
+			});
+		});
+
+		quotationOrder["quotationOrderDetails"] = objBodyList;
+		quotationOrder["withTaxAmt"] = $("#withTaxAmt").text();
+		quotationOrder["privilegeAmt"] = $("#privilegeAmt").val();
+		quotationOrder["dealAmt"] = $("#dealAmt").text();
+
+		// 报价单尾部信息
+		quotationOrder["arrivalDays"] = $("input[name=\"arrivalDays\"]").val();
+		var _deliveryMode = $("input[name='deliveryMode']:checked").val();
+		quotationOrder["deliveryMode"] = _deliveryMode;
+		if ("001" == _deliveryMode) {
+			quotationOrder["otherAdd"] = "";
+		} else if ("002" == _deliveryMode) {
+			quotationOrder["otherAdd"] = $("#waitDays").val();
+		} else if ("003" == _deliveryMode) {
+			quotationOrder["otherAdd"] = $("#otherChoice").val();
+		}
+
+		return quotationOrder;
+	}
 
 	/* 
 	 * 创建表格
@@ -169,22 +222,18 @@ div {
 
 		table.id = upLayerId + "_Tbl_" + index;
 		table.className = "ListTable";
-		table.width = "125%";
-		table.width =table.width+"150px";
-		table.border = "0";
+		table.width = "100%";
+		table.border = "1";
 		table.spellcheck = "false";
 		table.contenteditable = "true";
-		table.style.textAlign="center";
-		
+
 		var trtlt = document.createElement("tr");
 		var tdtlt = document.createElement("td");
-		tdtlt.style.border = "1px solid black";
 		trtlt.bgColor = "#008080";
 		tdtlt.style.fontWeight = "bold";
 		tdtlt.style.paddingLeft = "40px";
 		tdtlt.innerHTML = "</br>";
-		tdtlt.style.width="80%";
-		tdtlt.colSpan = subfieldEngNameList.length - 1;
+		tdtlt.colSpan = subfieldEngNameList.length + 1;
 		tdtlt.setAttribute("align", "left");
 		trtlt.appendChild(tdtlt);
 
@@ -196,39 +245,25 @@ div {
 		for (var i = 0; i <= subfieldLen; i++) {
 			var td0Cur = document.createElement("td");
 			var td1Cur = document.createElement("td");
-			td0Cur.style.border = "1px solid black";
-			td1Cur.style.border = "1px solid black";
 
 			if (0 == i) {
-				td0Cur.width = "12%";
+				td0Cur.width = "10%";
 				td0Cur.innerHTML = "<a href='javascript:void(0)' id="
-						+ subTblRowId + " style=\"color:black\" >添加子商品</a>";
+						+ subTblRowId + " style=\"color:black\" >添加</a>";
 				td1Cur.innerHTML = "<input type='hidden' name='_hidden' /><a  onclick='deleteRow(\""
 						+ table.id + "\", this, " + index + ", false)'>删除</a>";
 			} else if (1 == i || subfieldLen == i) {
 				td0Cur.innerHTML = "<td style=\"border:1px solid black;\">"
 						+ subfieldChsNameList[i - 1] + "</td>";
-				td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;\"  name="
+				td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" readonly=\"readonly\" name="
 						+ subfieldEngNameList[i - 1] + " ></input>";
 			} else {
-				if( subfieldEngNameList[i - 1]=='jdPrice' || subfieldEngNameList[i - 1]=='url'){
-	    		  	td0Cur.innerHTML = "<td  style=\"border:1px solid black;\" >" + subfieldChsNameList[i - 1]
-					+ "</td>";
-					td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;font-size:12px;\" name="
-					+ subfieldEngNameList[i - 1] + "   placeholder='以便于更准确的报价' ></input>";
-				}else{
-				td0Cur.innerHTML = "<td  style=\"border:1px solid black;\" >" + subfieldChsNameList[i - 1]
+				td0Cur.innerHTML = "<td>" + subfieldChsNameList[i - 1]
 						+ "</td>";
-				td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;\" name="
+				td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" name="
 						+ subfieldEngNameList[i - 1] + " ></input>";
-	    		}	
 			}
-			if(subfieldEngNameList[i - 1]=='url'){
-    		  	td0Cur.innerHTML = "<td  style=\"border:1px solid black;\" >" + subfieldChsNameList[i - 1]
-				+ "</td>";
-				td1Cur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;font-size:12px;\" name="
-				+ subfieldEngNameList[i - 1] + "   placeholder='以便于更准确的报价' ></input>";
-			}
+
 			tr0.appendChild(td0Cur);
 			tr1.appendChild(td1Cur);
 		}
@@ -290,44 +325,26 @@ div {
 	function addRow(tableId, createSubTbl, fieldChsNameList, fieldEngNameList,
 			subfieldChsNameList, subfieldEngNameList) {
 
-		 var tab = document.getElementById(tableId);
-		    var rowIndex = tab.rows.length;
-		    var lastrowIndex = rowIndex;
+		var tab = document.getElementById(tableId);
+		var rowIndex = tab.rows.length;
+		var lastrowIndex = rowIndex;
 
-		    var tr = tab.insertRow(rowIndex); // 添加一行;
-		    var curTypeTbl = createSubTbl ? fieldEngNameList:subfieldEngNameList;
-		    var curTypeTblLen =curTypeTbl.length;
-		    for (var i = 0; i <= curTypeTblLen; i++) 
-		    {
-		        var tdCur = tr.insertCell(i);
-		        tdCur.style.border = "1px solid black";
-		        if (0 == i) 
-		        {
-		            tdCur.innerHTML = "<input type='hidden' style=\"border:0px;text-align:center;\" name='_hidden' /><a style=\"border:0px;\" onclick='deleteRow(\"tab\", this," 
-		                    + rowIndex + "," + createSubTbl + ")'>删除</a>";         
-		        } else  if (i == curTypeTblLen || !createSubTbl && 1 == i)        	
-		        {
-		            tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;\" name=\"" + curTypeTbl[i-1] + "\"  />";
-		        } else 
-		        {
-		        	if(i==1){
-		        		  tdCur.innerHTML = NumberToChinese(lastrowIndex)+"、<input type=text style=\"width:80%;border:0px;\" placeholder='请输入商品名称'  name=\"" + curTypeTbl[i-1] + "\" />";
-		        	}else{
-		        			if(curTypeTbl[i-1]=='currency'){
-		        		  		tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;\" value='人民币' name=\"" + curTypeTbl[i-1] + "\" />";
-		        			}else if(curTypeTbl[i-1]=='jdPrice'  ){
-		        		  		tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;font-size:12px;\" placeholder='以便于更准确的报价' name=\"" + curTypeTbl[i-1] + "\" />";
-		        			}else{
-			        		  tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;\" name=\"" + curTypeTbl[i-1] + "\"  />";
-		        			}
-	
-		        	}
-		        }
-		        if(curTypeTbl[i-1]=='url'){
-    		  		tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;text-align:center;font-size:12px;\" placeholder='以便于更准确的报价' name=\"" + curTypeTbl[i-1] + "\" />";
-    			}
-		    }
-//   		  tdCur.innerHTML = "<div class='col-sm-2' >"+NumberToChinese(lastrowIndex)+"、</div><div class='col-sm-10' ><input type=text style=\"width:100%;border:0px;\"   name=\"" + curTypeTbl[i-1] + "\" /></div>";
+		var tr = tab.insertRow(rowIndex); // 添加一行;
+		var curTypeTbl = createSubTbl ? fieldEngNameList : subfieldEngNameList;
+		var curTypeTblLen = curTypeTbl.length;
+		for (var i = 0; i <= curTypeTblLen; i++) {
+			var tdCur = tr.insertCell(i);
+			if (0 == i) {
+				tdCur.innerHTML = "<input type='hidden' style=\"border:0px;\" name='_hidden' /><a  style=\"border:0px;\" onclick='deleteRow(\"tab\", this,"
+						+ rowIndex + "," + createSubTbl + ")'>删除</a>";
+			} else if (i == curTypeTblLen || !createSubTbl && 1 == i) {
+				tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" name=\""
+						+ curTypeTbl[i - 1] + "\" readonly=\"readonly\" />";
+			} else {
+				tdCur.innerHTML = "<input type=text style=\"width:100%;border:0px;\" name=\""
+						+ curTypeTbl[i - 1] + "\" />";
+			}
+		}
 
 		lastrowIndex = initRows(tab); // 初始化行;
 
@@ -337,6 +354,24 @@ div {
 		}
 
 		initSeq(); // 初始化商品序号
+
+		$("input[name='productType']").unbind("blur")
+				.bind(
+						"blur",
+						function() { // 服务组名称变更, 联动服务明细列表表头名称变更
+
+							var hiddenInput = $(this).parent().prev().find(
+									"input")[0].value;
+
+							if (this.value.length > 0) {
+								$("#subDivId_Div_" + hiddenInput).find("table")
+										.find("tbody")
+										.find("tr:eq(0) td:eq(0)").text(
+												this.value);
+							}
+
+							currencyChange();
+						});
 
 		$("input[name=amount], input[name=unitPrice]").unbind("blur").bind(
 				"blur",
@@ -412,12 +447,7 @@ div {
 					$("#mainDivId").find("#area_sumAmount").find("#finalAmt")
 							.html(withTaxAmt.toFixed(2));
 				});
-		
-		$("#container").height($(document).height());
-		$("#bottomD").height($("#bottom").height());
-		$("#mainDivId").find("input[name=currency]").attr("readOnly","true");
-		$("#mainDivId").find("input[name=grpAmount]").attr("readOnly","true");
-
+		$("#bg").height($(document).height());
 	}
 
 	/*
@@ -451,82 +481,31 @@ div {
 
 	//删除行;(obj代表连接对象)  
 	function deleteRow(tableId, obj, index, deleteSubTbl) {
+
 		var tr = obj.parentNode.parentNode; // 获取tr对象;  
 		var tab = document.getElementById(tableId);
+
 		if (tab.rows.length > 1) {
 			tr.parentNode.removeChild(tr);
 		}
+
 		initRows(document.getElementById(tableId)); //重新生成行号; 
+
 		var subDiv = document.getElementById("subDivId_Div_" + index);
 		var subTbl = document.getElementById("subDivId_Tbl_" + index);
 		if (deleteSubTbl && null != subTbl) { // 删除子表与子标签
 			subTbl.parentNode.removeChild(subTbl);
 		}
+
 		if (deleteSubTbl && null != subDiv) {
 			subDiv.parentNode.removeChild(subDiv);
 		}
-		initSeq(); // 初始化商品序号
-		$("#container").height(0);
-		$("#container").height($(document).height());
-		$("#bottomD").height($("#bottom").height());
 
+		initSeq(); // 初始化商品序号
 	}
 	
-
-
-	var chnNumChar = ["零","一","二","三","四","五","六","七","八","九"];
-	var chnUnitSection = ["","万","亿","万亿","亿亿"];
-	var chnUnitChar = ["","十","百","千"];
-	function SectionToChinese(section){
+	function bottom(){
 		
-		  var strIns = '', chnStr = '';
-		  var unitPos = 0;
-		  var zero = true;
-		  while(section > 0){
-		    var v = section % 10;
-		    if(v === 0){
-		      if(!zero){
-		        zero = true;
-		        chnStr = chnNumChar[v] + chnStr;
-		      }
-		    }else{
-		      zero = false;
-		      strIns = chnNumChar[v];
-		      strIns += chnUnitChar[unitPos];
-		      chnStr = strIns + chnStr;
-		    }
-		    unitPos++;
-		    section = Math.floor(section / 10);
-		  }
-		  return chnStr;
-		}
-	function NumberToChinese(num){
-		  var unitPos = 0;
-		  var strIns = '', chnStr = '';
-		  var needZero = false;
-		 
-		  if(num === 0){
-		    return chnNumChar[0];
-		  }
-		 
-		  while(num > 0){
-		    var section = num % 10000;
-		    if(needZero){
-		      chnStr = chnNumChar[0] + chnStr;
-		    }
-		    strIns = SectionToChinese(section);
-		    strIns += (section !== 0) ? chnUnitSection[unitPos] : chnUnitSection[0];
-		    chnStr = strIns + chnStr;
-		    needZero = (section < 1000) && (section > 0);
-		    num = Math.floor(num / 10000);
-		    unitPos++;
-		  }
-		  if(chnStr.length==2 || chnStr.length==3){
-			  if(chnStr.substring(0,1)=="一"){
-				  chnStr=chnStr.substring(1,chnStr.length)
-			  } 
-		  }
-		  return chnStr;
 	}
 </script>
 
@@ -558,7 +537,7 @@ div {
 		</div>
 	</div>
 </div>
-<div id="container" style="position: absolute !important;top:0px;left: 0px;z-index:6 !important;width:100%;background-color: #777;  opacity:0.5; -moz-opacity:0.5;  "></div>
+<div id="container" style="position: absolute !important;top:0px;left: 0px;z-index:6 !important;width:100%;"></div>
 
 <div style="padding-top: 50px;">
 	<div class="col-sm-2"></div>
@@ -573,77 +552,56 @@ div {
 		</div>
 	</div>
 </div>
-<div class="col-sm-12" style="padding:0px;">
-	<div class="col-sm-2" style="padding:0px;">
-		<div class="col-sm-12" style="font-size: 12px;">
-			<strong>操作步骤：</strong>
-			<p>由左至右依次进行！</p>			
-		</div>
-		<div class="col-sm-12" style="font-size: 12px;">
-			<strong>批注注释</strong>
-			<ul>
-				<p><li class="C1">拉收单位信息</li></p>
-				<p><li class="C2">输入报价关于</li></p>
-				<p><li class="C3">选择结算币种</li>	</p>
-				<p><li class="C4">选择付款方式</li>	</p>
-				<p><li class="C5">选择销售人员</li>	</p>
-				<p><li class="C6">添加商品大类</li>	</p>
-				<p><li class="C7">添加商品详细信息</li></p>
-				<p><li class="C8">确认到货日期及付款期限</li></p>
-				<p><li class="C9">获得报价单</li></p>
-			</ul>			
-		</div>
-	</div>
-	<div class="col-sm-8" style="padding:0px;">
+<div class="col-sm-12">
+	<div class="col-sm-2"></div>
+	<div class="col-sm-8">
 		<form name="myForm">
 			<div id="headDivId" class="col-sm-12" style="padding: 0px;">
-				<div class="col-sm-12"  style="width: 100%;height:25px;padding: 0px;">
-		        	<div  style="font-size:14px;height:25px;line-height:25px; background-color:#008080;text-align: left;width:50%;font-weight: bold;margin-bottom:3px;z-index:8;position: absolute !important;top:0px;">
-		        			<div class="col-sm-9" >尊敬的客户，您好！兹对贵司需求报价如下：</div>
-		        			<div class="col-sm-3" style="padding:0px;">
-		        				<div class="col-sm-6" style="padding:0px;"><a  class="loginInboxClick first" href="javascript:void(0)" style="color:#ffffff;font-weight:bold;"> 登录</a></div>
-		               			<div class="col-sm-6" style="padding:0px;"><a  class="signupInboxClick first" href="javascript:void(0)" style="color:#ffffff;font-weight:bold;" >注册</a></div>
-		               	   </div>
+				<div style="width: 100%;height:25px;">
+		        	<div  style="height:25px;line-height:25px; background-color:#008080;text-align: left;width:43.5%;font-weight: bold;margin-bottom:3px;z-index:7;position: absolute !important;top:0px;left: 15px;">
+		        			尊敬的客户，您好！兹对贵司需求报价如下：
+		        			<a  class="loginInboxClick first" href="javascript:void(0)" style="color:red;font-weight:bold;"> 登录/ </a>
+		               		<a   class="signupInboxClick first" href="javascript:void(0)" style="color:red;font-weight:bold;" >注册</a>
 		            </div>
 		         </div>
 		         <div  style="width:50%;" >
-			        	<div id="loginIndex" hidden="false" style="width:60%;position: absolute !important;top:0px;z-index:8;	box-shadow: 2px 4px 6px #000;background:#fff; 
+			        	<div id="loginIndex" hidden="false" style="width:60%;position: absolute !important;top:0px;left: 15px;z-index:8;	box-shadow: 2px 4px 6px #000;background:#fff; 
 				background: -moz-linear-gradient(#fff, #999); 
 				background: -webkit-linear-gradient(#fff, #999); 
 				background: -o-linear-gradient(#fff, #999); padding-top:20px;" >
 							<form:form  id="loginForm" class="form-group form-horizontal">
 								<div class="form-group" >
-									<div class="col-sm-11" style="text-align: right;" ><a  href="javascript:void(0)" style="color:#008080;font-weight:bold;" onclick="closeLogin()">X</a></div>
+									<div class="col-sm-11" style="text-align: right;" ><a  href="javascript:void(0)" style="color:red;font-weight:bold;" onclick="closeLogin()">X</a></div>
 								</div>
 								<fieldset>
-									<div  class="col-sm-11" style="font-size: 25px;"> 登录 </div>
+									<legend>登录</legend>
 									<div class="form-group" style="margin-bottom:5px;">
-								        <label  class="col-sm-3"  style="text-align: right;line-height:34px;">账户：</label>
-								        <div class="col-sm-8"  style="height:34px;">
+								        <label  class="col-sm-3"  style="text-align: right;line-height:25px;">账户：</label>
+								        <div class="col-sm-8"  style="height:25px;">
 								        		<span class="block input-icon input-icon-right">
-													<input type="text" style="height:34px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center"  ng-model="userName"  onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');"  class="form-control required"  placeholder="您的手机号码"/>
+													<input type="text" style="height:25px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center"  ng-model="userName" class="form-control required"  placeholder="您的个人邮箱或手机号码"/>
 													<i class="ace-icon fa fa-user"></i>
 												</span> 
 								        </div>
 								    </div>
 								    <div class="form-group" style="margin-bottom:5px;">
-								        <label class="col-sm-3" style="text-align: right;line-height:34px;">密码：</label>
-								        <div class="col-sm-8"  style="height:34px;">
+								        <label class="col-sm-3" style="text-align: right;line-height:25px;">密码：</label>
+								        <div class="col-sm-8"  style="height:25px;">
 								        		<span class="block input-icon input-icon-right">
-													<input type="password"  style="height:34px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" ng-model="password"  class="form-control required" placeholder="密码" />
+													<input type="password"  style="height:25px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" ng-model="password"  class="form-control required" placeholder="密码" />
 													<i class="ace-icon fa fa-lock"></i>
 												</span> 
 								        </div>
 								    </div>
 									 <div class="form-group" style="margin-bottom:5px;">
-									       <label class="col-sm-3" style="text-align: right;line-height:34px;">验证码:</label>
+									       <label class="col-sm-3" style="text-align: right;line-height:25px;">验证码:</label>
 									       <div class="col-xs-4" style="padding-right: 0px;">
 												<input type="text" class="form-control" maxlength="5" ng-model="code" 
 													 ng-blur="validateCode()"  placeholder="请输入验证码..." >
 											</div>
 											<div class="col-xs-3" onclick="createCode()"
-												style="background-color: #008080; height: 34px;padding-right: 0px;line-height:34px;">
-												<a href="javascript:void(0);" style="color:#ffffff;" id="discode"></a>
+												style="background-color: olive; height: 34px;padding-right: 0px;line-height:34px;">
+												<a href="javascript:void(0);" id="discode"></a>
 											</div>
 											<div class="col-sm-12" style="padding-top: 0px;">
 												<label  class="col-sm-3"> 
@@ -654,7 +612,7 @@ div {
 								    </div>
 									<div class="form-group"  style="margin-bottom:5px;margin-top: 20px;"> 
 										<div class="col-sm-12"   style="height:30px;text-align: center;">
-											<button type="button"  class="btn btn-sm btn-success"  style="border-radius:5px; height:100%;width: 60% ;color:#ffffff;" ng-click="frontlogin()" >
+											<button type="button" style="background-color: red;border: 0px;	border-radius:5px; height:100%;width: 60% " ng-click="frontlogin()" >
 												<i class="ace-icon fa fa-key"></i>
 												<span>登录</span>
 											</button>
@@ -664,136 +622,121 @@ div {
 									</div>
 							     </fieldset>
 							</form:form> 
-							<div >
-								<div class="col-sm-6" style="margin-bottom: 20px;">
-									<a href="javascript:void(0)" style="color:#449d44;font-weight:bold;" ng-click="forgetPassword()">忘记密码？</a>
-								</div>
-								<div class="col-sm-6" style="text-align: right;margin-bottom: 20px;">
-									<a  class="signupInboxClick" href="javascript:void(0)" style="color:#ffffff;font-weight:bold;">注册 </a>
-								</div>
+							<div class="form-options" style="text-align: right">
+								<a  class="signupInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;">注册 </a>
 							</div>
 						</div>
-						<div id="signupBox" hidden="false" style="width:60%;position: absolute !important;top:0px;z-index:8;	box-shadow: 2px 4px 6px #000;background:#fff; 
+						<div id="signupBox" hidden="false" style="width:60%;position: absolute !important;top:0px;left: 15px;z-index:8;	box-shadow: 2px 4px 6px #000;background:#fff; 
 				background: -moz-linear-gradient(#fff, #999); 
 				background: -webkit-linear-gradient(#fff, #999); 
 				background: -o-linear-gradient(#fff, #999); padding-top:10px;">
 								     	<form:form id="inputForm"  method="post" class="form-group form-horizontal">
 										  <input  type="hidden" value="fc" name="roleName"><!-- 默认注册用户都是超级管理员   要修改滴-->
 										 <div class="form-group" >
-											<div class="col-sm-11" style="text-align: right;" ><a  href="javascript:void(0)" style="color:#008080;font-weight:bold;" onclick="closeRegisterUser()">X</a></div>
+											<div class="col-sm-11" style="text-align: right;" ><a  href="javascript:void(0)" style="color:red;font-weight:bold;" onclick="closeRegisterUser()">X</a></div>
 										</div>
 										  <fieldset>
-										  	<div  class="col-sm-11" style="font-size: 25px;">注册 </div>
+										  	<legend>注册</legend>
 										    <div class="form-group"  style="margin-bottom:5px;"> 
-										      <label class="col-sm-3" style="text-align: right;line-height:25px;">手机：</label>
+										      <label class="col-sm-3" style="text-align: right;line-height:25px;">手机</label>
 										      <div class="col-sm-8">
 										        <span class="block input-icon input-icon-right">
-													<input id="tel" name="mobile" type="text" ng-model="rePhone"  onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');"  value="" maxlength="11" minlength="11" style="height: 34px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" class="form-control text-muted required isMobile"  placeholder="手机号"/>
+													<input id="tel" name="mobile" type="text" ng-model="rePhone" value="" maxlength="11" minlength="11" style="height:25px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" class="form-control text-muted required isMobile"  placeholder="手机号"/>
 													<i class="ace-icon fa fa-phone"></i>
 												</span>
 										      </div>
 										    </div>
-<!-- 										    <div class="form-group"  style="margin-bottom:5px;">  -->
-<!-- 										      <label class="col-sm-3" style="text-align: right;line-height:25px;">验证手机</label> -->
-<!-- 										      <div class="col-sm-5"> -->
-<!-- 										        <span class="block input-icon input-icon-right"> -->
-<!-- 														<input id="reCode" name="randomCode" type="text" ng-model="reCode" value="" maxlength="6" minlength="6"  style="height:25px;width: 100%;border: 0px;border-bottom: 1px solid;text-align: center"  class="form-control required"  placeholder="验证码"/> -->
-<!-- 												</span> -->
-<!-- 										      </div> -->
-<!-- 										      <div class="col-sm-4"> -->
-<!--  													<button style="height: 100%;text-align: center;background-color: #008080;border: 0px;border-radius:2px;、color:#ffffff;" type="button" id="sendCodeRe" ng-click="sendCodeRegister()"  > -->
-<!-- 															<i class="ace-icon fa fa-lightbulb-o"></i> -->
-<!-- 															<span class="bigger-110">{{countdown}}</span> -->
-<!-- 													</button> -->
-<!-- 										      </div> -->
-<!-- 										    </div> -->
-										    <div class="form-group" style="margin-bottom:5px;">
-											       <label class="col-sm-3" style="text-align: right;line-height:25px;">验证手机：</label>
-											       <div class="col-xs-4" style="padding-right: 0px;">
-														<input type="text" id="reCode" name="randomCode"   class="form-control required"  placeholder="验证码" maxlength="6" ng-model="reCode"   >
-													</div>
-													<div class="col-xs-3"  
-														style="height: 34px;padding: 0px;line-height:34px;">
-														 <button   style="color:#ffffff;background-color: #008080; width: 100%;border: 0px;" id="sendCodeRe" ng-click="sendCodeRegister()">{{countdown}}</button> 
-													</div>
+										    <div class="form-group"  style="margin-bottom:5px;"> 
+										      <label class="col-sm-3" style="text-align: right;line-height:25px;">验证手机</label>
+										      <div class="col-sm-4">
+										        <span class="block input-icon input-icon-right">
+														<input id="reCode" name="randomCode" type="text" ng-model="reCode" value="" maxlength="6" minlength="6"  style="height:25px;width: 100%;border: 0px;border-bottom: 1px solid;text-align: center"  class="form-control required"  placeholder="验证码"/>
+												</span>
+										      </div>
+										      <div class="col-sm-4">
+ 													<button style="height: 100%;text-align: center;background-color: #bdbdbd;border: 0px;border-radius:2px;margin-left:30px;" type="button" id="sendCodeRe" ng-click="sendCodeRegister()"  >
+															<i class="ace-icon fa fa-lightbulb-o"></i>
+															<span class="bigger-110">{{countdown}}</span>
+													</button>
+										      </div>
+										     
 										    </div>
 										    <div class="form-group"  style="margin-bottom:5px;"> 
-										     	<label class="col-sm-3" style="text-align: right;line-height:25px;">密&nbsp;&nbsp;&nbsp;码：</label>
+										     	<label class="col-sm-3" style="text-align: right;line-height:25px;">密&nbsp;&nbsp;&nbsp;码</label>
 										      	<div class="col-sm-8">
 										       		<span class="block input-icon input-icon-right">
-														<input id="newPassword" name="password" ng-model="rePassword" type="password" style="height: 34px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" value="" maxlength="20" minlength="3"  class="form-control required" placeholder="密码" />
+														<input id="newPassword" name="password" ng-model="rePassword" type="password" style="height:25px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center" value="" maxlength="20" minlength="3"  class="form-control required" placeholder="密码" />
 														<i class="ace-icon fa fa-lock"></i>
 													</span>
 										      </div>
 										    </div>
 										     <div class="form-group"  style="margin-bottom:5px;"> 
-										       <label class="col-sm-3" style="text-align: right;line-height:25px;">重复密码：</label>
+										       <label class="col-sm-3" style="text-align: right;line-height:25px;">重复密码</label>
 										       <div class="col-sm-8">
 										        	<span class="block input-icon input-icon-right">
-														<input id="confirmNewPassword" name="confirmNewPassword" ng-model="reConfirmNewPassword"  style="height: 34px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center"  type="password" value="" maxlength="20" minlength="3" class="form-control required" equalTo="#newPassword" placeholder="重复密码" />
+														<input id="confirmNewPassword" name="confirmNewPassword" ng-model="reConfirmNewPassword"  style="height:25px;width: 90%;border: 0px;border-bottom: 1px solid;text-align: center"  type="password" value="" maxlength="20" minlength="3" class="form-control required" equalTo="#newPassword" placeholder="重复密码" />
 														<i class="ace-icon fa fa-retweet"></i>
 													</span>
 										      </div>
 										    </div>
-				        					 <div class="form-group"  style="margin-bottom:5px;text-align: center;margin-top: 20px;"> 
-												<button type="button" class="btn btn-sm btn-success" style="border-radius:5px; height:100%;width:60% ;color:#ffffff;" ng-click="registerUser()"> 
+				        					 <div class="form-group"  style="margin-bottom:5px;text-align: center"> 
+												<button type="reset" class="width-30  btn btn-sm">
+													<i class="ace-icon fa fa-refresh"></i>
+													<span class="bigger-110">重置</span>
+												</button>
+												<button type="button" class="width-30  btn btn-sm btn-success" ng-click="registerUser()"> 
 													<span class="bigger-110">注册</span>
 													<i class="ace-icon fa fa-arrow-right icon-on-right"></i>
 												</button>
-<!-- 												<button type="reset" class="btn btn-sm" style="border-radius:5px; height:100%;width:10% ; " > -->
-<!-- 													<i class="ace-icon fa fa-refresh"></i> -->
-<!-- 													<span class="bigger-110">重置</span> -->
-<!-- 												</button> -->
 											</div>
 										  </fieldset>
 										</form:form>
-				   						<div class="col-sm-12" style="margin-bottom: 20px;">
-											<a  class="loginInboxClick" href="javascript:void(0)" style="color:#ffffff;font-weight:bold;"> 返回登录 </a>
+				   						<div class="form-options center">
+											<a  class="loginInboxClick" href="javascript:void(0)" style="color:red;font-weight:bold;"> 返回登录 </a>
 									   </div>
 						</div>
 					</div>
-				<div class="col-sm-6 " style="padding:0px;" >
-					<div id="leftD" ng-click="leftD()" style="width:100%;height:150px;position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #777;  opacity:0; -moz-opacity:0.5; display: none;" ></div>
-					<div class="col-sm-12" id="left">
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C1')">
+				<div class="col-sm-6" style="padding:0px;">
+					<div class="col-sm-12">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4"
 								style="text-align: right; line-height: 25px;">至： </label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input type="text" ng-model="custName"
 									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;"
-									id="custName" name="custName" disabled placeholder="客户姓名，无需输入，根据客户信息显示。" />
+									id="custName" name="custName" readonly="readonly" />
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C1')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">客户公司：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input type="text" id="company" name="company"  ng-model="company"
-									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" disabled placeholder="无需输入，根据客户信息显示"/>
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" readonly="readonly"/>
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C1')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">公司电话：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input type="text" id="companyPhone" name="companyPhone"   ng-model="companyPhone"
-									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" disabled  placeholder="无需输入，登录客户信息显示" />
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" readonly="readonly" />
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C1')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">公司传真：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input type="text" id="companyFax" name="companyFax" ng-model="companyFax"
-									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" disabled  placeholder="无需输入，登录客户信息显示" />
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" readonly="readonly" />
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C2')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">报价关于：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input type=text name="quotationAbout"  id="quotationAbout"   ng-model="quotationAbout"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black; text-align: center;" placeholder="默认“办公设备”，可更改"/>
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" />
 							</div>
 						</div>
 					</div>
@@ -802,64 +745,71 @@ div {
 <!-- 					<div id="rightEditorDiv"  style="display: none;position: absolute !important;top: 0px; z-index: 100;background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);opacity:0.5;"> -->
 <!-- 							<input type="button" id="rightEditor" ng-click="rightEditor()"  value="编辑" /> -->
 <!-- 					</div> -->
-					<div id="rightD" ng-click="rightD()" style="width:100%;height:150px;position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #777;  opacity:0; -moz-opacity:0.5;display: none; " ></div>
-					<div class="col-sm-12" style="text-align: right;padding:0px;"  id="right">
+					<div class="col-sm-12" style="text-align: right;padding:0px;">
 						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4"
 								style="text-align: right; line-height: 25px;">报价日期：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<input id="quotationDateStr" name="quotationDateStr" type="text"  ng-model="quotationDateStr"
 									readonly="readonly" maxlength="20" class="input-medium"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width:100%; height: 100%; color: black; text-align: center;"  />
+									style="border: 0px; border-bottom: 1px solid; width:100%; height: 100%; color: black; text-align: center;"  />
 							</div>
 						</div>
 						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">报价单号：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
-								<input type="text" name="quotationCode" readonly="readonly" ng-model="quotationCode" placeholder="报价成功自动显示"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black; text-align: center;" />
+								<input type="text" name="quotationCode" readonly="readonly" ng-model="quotationCode"
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black; text-align: center;" />
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C3')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">结算币种：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
-								<input type="hidden" name="settlementType" readonly="readonly" ng-model="settlementType" value="RMB"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black; text-align: center;" />
-								<input type="text" readonly="readonly" value="人民币"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black; text-align: center;" />
+								<select id="settlementType" name="settlementType" ng-change="right()" ng-model="settlementType"
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black;">
+									<option value="">请选择</option>
+									<option value="RMB">人民币</option>
+									<option value="USD">美元</option>
+									<option value="EUR">欧元</option>
+									<option value="GBP">英镑</option>
+									<option value="JPY">日元</option>
+								</select>
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C4')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">付款方式：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
 								<select id="payType" name="payType" ng-model="payType"
-									style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black;">
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black;">
+									<option value="">请选择</option>
 									<option value="001">现金</option>
 									<option value="002">支票</option>
 									<option value="003">转账</option>
 								</select>
 							</div>
 						</div>
-						<div class="form-group" style="margin-bottom: 5px; height: 25px;" onclick="addRightClass('C5')">
+						<div class="form-group" style="margin-bottom: 5px; height: 25px;">
 							<label class="col-sm-4 control-label"
 								style="text-align: right; line-height: 25px;">销售人员：</label>
 							<div class="col-sm-8" style="height: 25px; text-align: left;">
-								<select id="staffId"   ng-model="staffId"  style="border: 0px; border-bottom: 1px solid #bdbdbd; width: 100%; height: 100%; color: black;" ng-change="selectStaff()">
-									<option  ng-repeat="c in staffIds" value="{{c.id}}" >{{c.name}}</option>
-								</select> 
+								<select id="staffId" name="staffId"   ng-model="staffId"
+									style="border: 0px; border-bottom: 1px solid; width: 100%; height: 100%; color: black;">
+									<option value="">请选择</option>
+									<option value="a8196df87a9a40dfa4543b49d64c0759">李四</option>
+									<option value="a8196df87a9a40dfa4543b49d64c0759">张三</option>
+								</select>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-			<div class="col-sm-12"  style="padding: 0px;">
+			<div class="col-sm-12">
 <!-- 				<div id="bottomEditorDiv"  style="display: none;position: absolute !important;top: 0px; left:0px; z-index: 100;background: -webkit-linear-gradient(#fff, #999); background: -o-linear-gradient(#fff, #999);opacity:0.5;"> -->
 <!-- 					<input type="button" id="bottomEditor"  ng-click="bottomEditor()" value="编辑" /> -->
 <!-- 				</div> -->
-				<div id="bottomD" ng-click="bottomD()" style="width:100%;position: absolute !important;top:0px;left: 0px;z-index:7 !important;background-color: #777;  opacity:0; -moz-opacity:0.5;display: none; " ></div>
 				<div id="bottom" class="col-sm-12"  style="padding: 0px;">
 					<div id='mainDivId' >
 						<table width="100%">
@@ -867,18 +817,18 @@ div {
 								<th></th>
 							</tr>
 							<tr style="background-color: #008080; color: black;">
-								<th style="text-align: left; width: 100%;padding-left:16px;">项目总价</th>
+								<th style="text-align: left; width: 100%;">项目总价</th>
 							</tr>
 						</table>
-						<table width="100%" id="tab" style="text-align: center;" border="1" onclick="addRightClass('C6')">
+						<table width="100%" id="tab" style="text-align: center;" border="1">
 							<tr>
-								<td width="15%"><a id=mainAdd href="javascript:void(0)"
+								<td width="10%"><a id=mainAdd href="javascript:void(0)"
 									onclick="addRow('tab', true, 
 				                     ['项目名称', '计价币种', '税后总额'],
 				                     ['productType','currency','grpAmount'],
-				                     ['序号','产品名称','产品描述','数量','单价','金额','备注','京东价','链接'],
-				                     ['orderNo','productName','productDesc', 'amount', 'unitPrice','totalAmt', 'unin', 'jdPrice','url'])"
-									style="color: black" title="添加报价商品大类">添加商品大类 </a></td>
+				                     ['序号','产品名称','产品描述','单位','数量','单价(人民币)','金额(人民币)'],
+				                     ['orderNo','productName','productDesc', 'unin', 'amount', 'unitPrice', 'totalAmt'])"
+									style="color: black">添加 </a></td>
 								<td>项目名称</td>
 								<td style="text-align: left; width: 10%;">计价币种</td>
 								<td style="text-align: left; width: 25%;">税后总额</td>
@@ -894,7 +844,7 @@ div {
 									</td>
 								</tr>
 								<tr>
-									<td style="text-align: right; border-left: 1px solid black;">优惠:</td>
+									<td style="text-align: right; border-left: 1px solid black;">优惠(RMB):</td>
 									<td style="text-align: left; border-right: 1px solid black;">
 										<input type="text" id="privilegeAmt" name="privilegeAmt"
 										value="0" style="text-align: right; border: 0px; width: 100%" />
@@ -915,40 +865,36 @@ div {
 							</div>
 						</div>
 					</div>
-					<div id='subDivId'  onclick="addRightClass('C7')"></div>
+					<div id='subDivId'></div>
 		
 					<div>
 						<div class="col-sm-7" style="margin-top: 20px;">
 							<div style="text-align: left; font-weight: bold;">备注：</div>
-							<div style="text-align: left; padding-left: 20px;">1、报价均已含税（产品开具16%增值税发票，服务开具6%增值税发票）</div>
-							<div style="text-align: left; padding-left: 20px;">2、报价有效期：10个工作日</div>
-							<div style="text-align: left; padding-left: 20px;" id="arrivalDays"  onclick="addRightClass('C8')">
+							<div style="text-align: left; padding-left: 20px;">1、报价均已含税（产品开具17%增值税发票，服务开具6%增值税发票）</div>
+							<div style="text-align: left; padding-left: 20px;">2、报价有效期：5个工作日</div>
+							<div style="text-align: left; padding-left: 20px;" id="arrivalDays">
 								3、到货时间：报价单签字确认回传合同签订后 <input type=text name="arrivalDays"
-									value="10"
+									value="5"
 									style="width: 50px; align: center; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />个工作日
 							</div>
 							<div style="text-align: left; padding-left: 20px;">4、付款期限：</div>
-							<div style="text-align: left; padding-left: 100px;" onclick="addRightClass('C8')">
+							<div style="text-align: left; padding-left: 100px;">
 								<input type="radio" name="deliveryMode" id="radio" value="001">款到发货.
 							</div>
-							<div style="text-align: left; padding-left: 100px;" onclick="addRightClass('C8')">
+							<div style="text-align: left; padding-left: 100px;">
 								<input type="radio" name="deliveryMode" id="radio" value="002"
 									checked="checked" />货到<input type="text" id="waitDays"
 									name="waitDays" value="7"
 									style="width: 50px; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />
 								工作日(现金、支票、转账)付款。
 							</div>
-							<div style="text-align: left; padding-left: 100px;" onclick="addRightClass('C8')">
-								<input type="radio" name="deliveryMode" id="radio" value="004"
-									  />月结 
-							</div>
-							<div style="text-align: left; padding-left: 100px;" onclick="addRightClass('C8')">
+							<div style="text-align: left; padding-left: 100px;">
 								<input type="radio" name="deliveryMode" id="radio" value="003" />其他<input
 									type="text" id="otherChoice" name="otherChoice"
 									style="width: 300px; height: 20px; line-height: 20px; border: 0px; border-bottom: 1px solid;" />。
 							</div>
 						</div>
-						<div class="col-sm-5" >
+						<div class="col-sm-5">
 							<div
 								style="text-align: left; font-weight: bold; font-size: 22px; padding-top: 50px;">客户签名(签章):</div>
 							<div style="text-align: left; padding-top: 75px">
@@ -965,12 +911,13 @@ div {
 					</div>
 					<div>
 						<div class="col-sm-7">
-							<div style="text-align: left">地址:上海市杨浦区大学路248弄1002室</div>
+							<div style="text-align: left">地址:上海市杨浦区黄兴路1号中通大厦1楼北侧铺(眉州支路92-96号)</div>
 							<div style="text-align: left">
-								手机:{{cPhone}} 
+								电话:021-65435161<label style="width: 30px;"> </label>传真:65435240
 							</div>
 							<div style="text-align: left">
-								E-mail：{{cEmail}}
+								手机 13311763209<label style="width: 30px;"> </label>
+								E-mail：gongquan.xie@sh-sapling.com
 							</div>
 							<div>
 								<br> <br>
@@ -983,7 +930,7 @@ div {
 							<div style="font-weight: bold; font-size: 22px;">Best
 								Regards!</div>
 							<div
-								style="font-weight: bold; font-size: 25px; height: 80px; line-height: 80px;text-align: center">{{cName}}</div>
+								style="font-weight: bold; font-size: 25px; height: 80px; line-height: 80px;">谢功全</div>
 							<div style="height: 3px;">
 								<hr
 									style="height: 3px; border: none; border-top: 3px double black;" />
@@ -991,16 +938,11 @@ div {
 							<div>如有任何疑问请即时与我联系!</div>
 						</div>
 					</div>
-					<div class="row" id="submitId" align="center" onclick="addRightClass('C9')" style="margin-bottom: 20px;">
+					<div class="row" id="submitId" align="center">
 						<div class="col-sm-12">
-							<div class="col-sm-6" style="text-align: right;margin-top: 30px;">
-								<input id="submitPriceSheet" class="btn btn-action" type="button"
-								value="审核后获得报价单" ng-click="submitCheckPriceSheetDirect()" />
-							</div>
-							<div class="col-sm-6" style="text-align: left;margin-top: 30px;">
-								<input id="submitPriceSheetDirect"
-								class="btn btn-action" type="button" value="获得报价单"  ng-click="submitPriceSheetDirect()"  />
-							</div>
+							<input id="submitPriceSheet" class="btn btn-action" type="button"
+								value="审核后获得报价单" ng-click="submitPriceSheet()" /> <input id="submitPriceSheetDirect"
+								class="btn btn-action" type="button" value="获得报价单" ng-click="submitPriceSheetDirect()" />
 						</div>
 					</div>
 				</div>	
@@ -1008,7 +950,7 @@ div {
 		
 		</form>
 	</div>
-	<div class="col-sm-2" style="padding:0px;"></div>
+	<div class="col-sm-2"></div>
 </div>
 <div class="modal " id="registerSuccModel" tabindex="-1" role="dialog" style="top:35px;;background: #ffffff;"
 		aria-labelledby="myModalLabel" aria-hidden="true">
@@ -1018,12 +960,12 @@ div {
 					<h4 class="modal-title">温馨提示</h4>
 				</div>
 				<div class="modal-body">
-					<p>{{successs}}</p>
+					<p>注册成功！</p>
 					<div style="text-align: center;">
 						<button type="button" class="btn btn btn-info btn-sm"
 							data-dismiss="modal">返回</button>
 						<button type="button" class="btn btn btn-info btn-sm"
-							id="delButton" value="" ng-click="toPersonHtml(username)">去完善各人资料</button>
+							id="delButton" value="" ng-click="toPersonHtml()">去完善各人资料</button>
 					</div>
 				</div>
 			</div>
@@ -1088,102 +1030,6 @@ div {
 			</div>
 		</div>
 	</div>
-<div class="modal fade" id="forgetPasswordModel" tabindex="-1" role="dialog"
-	style="top: 20%; left: -10%" aria-labelledby="myModalLabel"
-	aria-hidden="true">
-	<div class="modal-dialog modal-sm">
-		<div class="modal-content" style="height: 250px; width: 500px">
-			<div class="modal-header"
-				style="background-color: #F2F2F2; height: 50px;">
-				<div class="col-sm-8">
-					<h4 class="modal-title">重置密码</h4>
-				</div>
-				<div class="col-sm-4" style="text-align: right;">
-					<a href="javascript:void(0)" style="color: #008080; font-weight: bold;"
-						ng-click="closeforgetPasswordModel()">X</a>
-				</div>
-			</div>
-			<div class="modal-body">
-				<div id="old_phone">
-					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
-						<label class="col-sm-3"
-							style="text-align: right; line-height: 25px;">手机：</label>
-						<div class="col-sm-8">
-							<span class="block input-icon input-icon-right"> <input
-								id="tel" name="mobile" type="text" ng-model="newPhone" value=""
-								maxlength="11" minlength="11"  onkeyup="this.value=this.value.replace(/[^0-9-]+/,'');" 
-								style="height: 34px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
-								class="form-control text-muted required isMobile"
-								 placeholder="手机号" /> <i
-								class="ace-icon fa fa-phone"></i>
-							</span>
-						</div>
-					</div>
-					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
-						<label class="col-sm-3"
-							style="text-align: right; line-height: 25px;">验证手机：</label>
-						<div class="col-sm-4">
-							<span class="block input-icon input-icon-right"> <input
-								id="reCode" name="randomCode" type="text" ng-model="newCode"
-								value="" maxlength="6" minlength="6"
-								style="height: 34px; width: 100%; border: 0px; border-bottom: 1px solid; text-align: center"
-								class="form-control required" placeholder="验证码" />
-							</span>
-						</div>
-						<div class="col-sm-4">
-							<button
-								style="text-align: center; background-color: #008080; border: 0px; border-radius: 2px;height:34px;color:#ffffff"
-								type="button" id="sendCodeOld" ng-click="newSendCode()">
-								<i class="ace-icon fa fa-lightbulb-o"></i> <span
-									class="bigger-110">{{newcountdown}}</span>
-							</button>
-						</div>
-					</div>
-					<div class="form-group col-sm-12"
-						style="margin-top: 30px; text-align: center;">
-						<button class="btn btn-sm btn-success"
-							style="width: 80%; border: 0px; color: white; height: 35px;"
-							ng-click="confirmPhone()" type="button">确认</button>
-					</div>
-				</div>
-				<div id="new_password" style="display: none;">
-					<div class="form-group col-sm-12" style="margin-bottom: 5px;">
-					<label class="col-sm-3"
-						style="text-align: right; line-height: 25px;">新密码：</label>
-					<div class="col-sm-8">
-						<span class="block input-icon input-icon-right"> <input
-							id="tel" name="mobile" type="password" ng-model="newPassword"
-							value="" maxlength="11" minlength="11"
-							style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
-							class="form-control text-muted required isMobile"
-							placeholder="密码" /> <i class="ace-icon fa fa-phone"></i>
-						</span>
-					</div>
-				</div>
-				<div class="form-group col-sm-12" style="margin-bottom: 5px;">
-					<label class="col-sm-3"
-						style="text-align: right; line-height: 25px;">重复密码：</label>
-					<div class="col-sm-8">
-						<span class="block input-icon input-icon-right"> <input
-							id="tel" name="mobile" type="password" ng-model="newRePassword"
-							value="" maxlength="11" minlength="11"
-							style="height: 25px; width: 90%; border: 0px; border-bottom: 1px solid; text-align: center"
-							class="form-control text-muted required isMobile"
-							placeholder="密码" /> <i class="ace-icon fa fa-phone"></i>
-						</span>
-					</div>
-				</div>
-					<div class="form-group col-sm-12"
-						style="margin-top: 30px; text-align: center;">
-						<button
-							style="width: 80%; border: 0px; background-color: red; color: white; height: 35px;"
-							ng-click="updatePassword()" type="button">确认</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 <script type="text/javascript">
 $(function(){
 	createCode();
@@ -1203,13 +1049,6 @@ $(function(){
     	 $("#loginIndex").hide("slow");
      })
 })
-
-
-
-function addRightClass(className){
-	$(".addRightClass").removeClass("addRightClass");
-	$("."+className+"").addClass("addRightClass");
-}
 //生成验证码
 		function createCode() {  //创建验证码函数
 			code = "";
@@ -1224,7 +1063,7 @@ function addRightClass(className){
 			}// 设置验证码的显示样式，并显示
 			document.getElementById("discode").style.fontFamily = " Tahoma,Helvetica,Arial"; //设置字体
 			document.getElementById("discode").style.letterSpacing = "10px"; //字体间距
-			document.getElementById("discode").style.color = "#ffffff"; //字体颜色
+			document.getElementById("discode").style.color = "#ff0000"; //字体颜色
 			document.getElementById("discode").innerHTML = code; // 显示
 		}
 	$("#registProtocolBtn").click(function(){
@@ -1246,6 +1085,9 @@ function addRightClass(className){
 
 <script type="text/javascript">
 	// 初始化客户信息
+
+	var curStdFmtDate = getNowFormatDate(); // 设置当前报价日期
+	$("#quotationDateStr").val(curStdFmtDate);
 
 	$("#settlementType").change(function() {
 		currencyChange();
@@ -1331,4 +1173,38 @@ function addRightClass(className){
 // 				});
 // 			});
 
+// 	//直接提交报价单
+// 	$("#submitPriceSheetDirect").click(
+// 			function() {
+// 				if (!chkEssentialInput()) {
+// 					return;
+// 				}
+
+// 				var quotationOrder = getPriceSheetJson();
+// 				quotationOrder.transType = "001";
+
+// 				$.ajax({
+// 					type : 'POST',
+// 					data : JSON.stringify(quotationOrder),
+// 					contentType : 'application/json',
+// 					dataType : 'json',
+// 					url : '${ctx}/quotation/quotationOrder/save',
+// 					async : false,
+// 					success : function(obj) {
+// 						data = obj.body;
+// 						if (null != data && "0" == data.state) {
+// 							alert("【报价单保存失败】\n" + data.msg);
+// 						} else if (null != data && "1" == data.state) {
+// 							alert("【报价单保存成功】\n" + data.msg);
+// 							$("#headDivId").find("input[name=quotationCode]")
+// 									.val(data.quotationCode);
+// 						} else {
+// 							alert("【报价单提交失败】\n 数据处理异常，保存报价单失败！！！");
+// 						}
+// 					},
+// 					error : function(e) {
+// 						alert("报价单保存异常！！！");
+// 					}
+// 				});
+// 			});
 </script>

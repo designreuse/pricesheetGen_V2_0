@@ -32,31 +32,10 @@ public class ExchangeMail {
 	private static String demand = "mail.sh-sapling.com";// 邮件服务器
 	private static ExchangeService service;
 	
-	@SuppressWarnings("static-access")
-	public ExchangeMail(String username,String password) {
-		this.username=username;
-		this.password=password;
-	}
-	
-	public ExchangeMail() {
-		
-	}
 	/**
 	 * 初始化连接
 	 * */
 	private static void init(){
-		service = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
-		ExchangeCredentials credentials = new WebCredentials(username,password);
-		service.setCredentials(credentials);
-		try {
-			service.setUrl(new URI("https://" + demand + "/ews/exchange.asmx"));
-		} catch (URISyntaxException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	private static void init(String username,String password){
 		service = new ExchangeService(ExchangeVersion.Exchange2007_SP1);
 		ExchangeCredentials credentials = new WebCredentials(username,password);
 		service.setCredentials(credentials);
@@ -80,31 +59,9 @@ public class ExchangeMail {
 	 */
 	public static void doSend(String subject, List<String> to, List<String> cc,
 			String bodyText, String realPath) throws Exception {
-//		if(service==null){
+		if(service==null){
 			init();
-//		}
-		EmailMessage msg = new EmailMessage(service);
-		msg.setSubject(subject);
-		MessageBody body = MessageBody.getMessageBodyFromText(bodyText);
-		body.setBodyType(BodyType.HTML);
-		msg.setBody(body);
-		for (String s : to) {
-			msg.getToRecipients().add(s);
 		}
-		// for (String s : cc) {
-		// msg.getCcRecipients().add(s);
-		// }
-		if (realPath != null && !"".equals(realPath)) {
-			msg.getAttachments().addFileAttachment(realPath);
-		}
-		msg.send();
-	}
-	
-	public static void doSend(String username ,String password,String subject, List<String> to, List<String> cc,
-			String bodyText, String realPath) throws Exception {
-//		if(service==null){
-			init(username,password);
-//		}
 		EmailMessage msg = new EmailMessage(service);
 		msg.setSubject(subject);
 		MessageBody body = MessageBody.getMessageBodyFromText(bodyText);

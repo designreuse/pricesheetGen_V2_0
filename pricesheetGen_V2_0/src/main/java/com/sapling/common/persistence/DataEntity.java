@@ -57,19 +57,6 @@ public abstract class DataEntity<T> extends BaseEntity<T> {
 		this.createDate = this.updateDate;
 	}
 	
-	@Override
-	public void frontInsert(User user){
-		// 不限制ID为UUID，调用setIsNewRecord()使用自定义ID
-		if (!this.isNewRecord){
-			setId(IdGen.uuid());
-		}
-		this.updateBy =user;
-		this.createBy = user;
-		this.updateDate = new Date();
-		this.createDate = this.updateDate;
-	}
-	
-	
 	/**
 	 * 更新之前执行方法，需要手动调用
 	 */
